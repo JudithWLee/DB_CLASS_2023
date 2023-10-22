@@ -78,6 +78,10 @@ class Product():
     def count():
         sql = 'SELECT COUNT(*) FROM PRODUCT'
         return DB.fetchone(DB.execute( DB.connect(), sql))
+
+    def search(pname):
+        sql = 'SELECT * FROM PRODUCT WHERE PNAME = :name'
+        return DB.fetchone(DB.execute_input(DB.prepare(sql), {'name': pname}))
     
     def get_product(pid):
         sql ='SELECT * FROM PRODUCT WHERE PID = :id'

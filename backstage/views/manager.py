@@ -76,6 +76,11 @@ def add():
 
         if (len(name) < 1 or len(price) < 1):
             return redirect(url_for('manager.productManager'))
+
+        # ensure that the name does not duplicate with existing names
+        if Product.search(name):
+            flash(f'duplicated product name')
+            return render_template('productManager.html')
         
         Product.add_product(
             {'pid' : pid,
