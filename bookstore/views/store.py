@@ -278,6 +278,39 @@ def orderlist():
 
     return render_template('orderlist.html', data=orderlist, detail=orderdetail, user=current_user.name)
 
+@store.route('/tasktracker')
+def tasktracker():
+    if "oid" in request.args :
+        pass
+    
+    user_id = current_user.id
+
+    data = Member.get_order(user_id)
+    tasktracker = []
+
+    for i in data:
+        temp = {
+            '訂單編號': i[0],
+            '訂單總價': i[3],
+            '訂單時間': i[2]
+        }
+        tasktracker.append(temp)
+    
+    orderdetail_row = Order_List.get_orderdetail()
+    orderdetail = []
+
+    for j in orderdetail_row:
+        temp = {
+            '訂單編號': j[0],
+            '商品名稱': j[1],
+            '商品單價': j[2],
+            '訂購數量': j[3]
+        }
+        orderdetail.append(temp)
+
+
+    return render_template('tasktracker.html', data=tasktracker, detail=orderdetail, user=current_user.name)
+
 def change_order():
     data = Cart.get_cart(current_user.id)
     tno = data[2] # 使用者有購物車了，購物車的交易編號是什麼
