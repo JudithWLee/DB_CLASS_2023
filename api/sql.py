@@ -28,6 +28,36 @@ class DB():
     def commit():
         connection.commit()
 
+class Filter():
+    def __init__(self):
+        self.user = %
+        self.status = %
+        self.keyword = ''
+        self.order_by = 'due date'
+        self.order = 'DESC'
+
+    def get_all_member():
+        pass
+
+    def get_all_status():
+        pass
+
+    def set_member_filter(self):
+        pass
+    
+    def set_status_filter(self):
+        pass
+
+    def set_keyword(self):
+        pass
+
+    def set_keyword(self):
+        pass
+
+    def set_order(self, order_by, order) -> None:
+        self.order_by = order_by
+        self.order = order
+
 class Member():
     def get_member(account):
         sql = "SELECT ACCOUNT, PASSWORD, MID, IDENTITY, NAME FROM MEMBER WHERE ACCOUNT = :id"
@@ -47,6 +77,61 @@ class Member():
         DB.execute_input(DB.prepare(sql), {'tno': tno, 'pid':pid})
         DB.commit()
         
+    def list_issue(user_filter: Filter):
+        """Lists all tasks.
+
+        By default, list all tasks available in order of task id;
+        if user specifies filter, show by filter.
+        Possible filters:
+        - task owner
+        - status
+        
+        Possible sorts:
+        - due date
+        
+        Can also search by keyword
+
+        Args:
+            user_filter (Filter): specified filter
+
+        Returns:
+            filtered tasks
+        """
+        # TODO modify the SELECT *
+        sql = "SELECT * FROM TASK
+               WHERE MID LIKE :id
+               AND STATUS LIKE :status
+               AND TITLE LIKE '%:keyword%'
+               ORDER BY :order_by :order"
+        return DB.fetchall(DB.execute_input(DB.prepare(sql),
+                                            {'id': user_filter.user,
+                                             'status': user_filter.status,
+                                             'keyword': user_filter.keyword,
+                                             'order_by': user_filter.order_by,
+                                             'order': user_filter.order}))
+
+    # TASKCOMMENT
+    # TASK
+    # TRACKUSER
+    def show_issue_detail(taskid):
+        """Show issue detail based on taskid.
+
+        Args:
+            taskid (int): the id of the task
+
+        Returns:
+            task details
+        """
+        # TODO modify the SELECT *
+        sql = 'SELECT * FROM TASK AS t
+               LEFT JOIN TRACKUSER AS u_owner ON t.taskowner = u_owner.uId
+               LEFT JOIN TRACKUSER AS u_assigner ON t.assigner = u_assigner.uId
+               LEFT JOIN TRACKUSER AS u_creator ON t.creator = u_creator.uId
+               LEFT JOIN TASKCOMMENT AS c ON t.tId = c.tId
+               WHERE TID = :taskid'
+        return DB.fetchall(DB.execute_input(DB.prepare(sql),
+                                            {'taskid': taskid}))
+
     def get_order(userid):
         sql = 'SELECT * FROM ORDER_LIST WHERE MID = :id ORDER BY ORDERTIME DESC'
         return DB.fetchall(DB.execute_input( DB.prepare(sql), {'id':userid}))

@@ -278,15 +278,24 @@ def orderlist():
 
     return render_template('orderlist.html', data=orderlist, detail=orderdetail, user=current_user.name)
 
-@store.route('/tasktracker')
-def tasktracker():
-    if "oid" in request.args :
+@store.route('/viewissue')
+def viewissue():
+    """Shows all issues to the user.
+
+    This function is triggered via the 'View Issues',
+    and renders template viewissue.html.
+
+    Returns:
+        return value of render_template
+    """
+    if "oid" in request.args:
+        print(f"oid: {oid}") # DEBUG
         pass
     
     user_id = current_user.id
 
     data = Member.get_order(user_id)
-    tasktracker = []
+    viewissue = []
 
     for i in data:
         temp = {
@@ -294,9 +303,9 @@ def tasktracker():
             '訂單總價': i[3],
             '訂單時間': i[2]
         }
-        tasktracker.append(temp)
+        viewissue.append(temp)
     
-    orderdetail_row = Order_List.get_orderdetail()
+    orderdetail_row = Order_List.get_issue()
     orderdetail = []
 
     for j in orderdetail_row:
@@ -309,7 +318,18 @@ def tasktracker():
         orderdetail.append(temp)
 
 
-    return render_template('tasktracker.html', data=tasktracker, detail=orderdetail, user=current_user.name)
+    return render_template('viewissue.html', data=viewissue,
+                           detail=orderdetail, user=current_user.name)
+
+def show_issue_detail():
+    """Shows issue detail.
+
+    Triggered by clicking on task id.
+
+    Returns:
+        return value of render_template
+    """
+    return render_template('issuedetail.html', taskid = taskid)
 
 def change_order():
     data = Cart.get_cart(current_user.id)
