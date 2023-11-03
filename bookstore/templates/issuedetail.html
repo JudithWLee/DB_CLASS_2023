@@ -1,0 +1,71 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}Issue Detail{% endblock title%}
+
+{% block content %}
+<!-- <form method="post" action="#"> -->
+  {% for i in issue_detail %}
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">Issue Detail</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="mb-3">
+                    <table class="table table-bordered">
+                      <tr>
+                        <th><center>taskID</center></th>
+                        <th><center>Creator</center></th>
+                        <th><center>Owner</center></th>
+                        <th><center>dueDate</center></th>
+                      </tr>
+                      <tr>
+                        <td> <center>{{ i.taskId }}</center></td>
+                        <td> <center>{{ i.creatorName }}</center></td>
+                        <td> <center>{{ j.ownerName }}</center></td>
+                        <td> <center>{{ j.dueDate }}</center></td>
+                      </tr>
+                      <tr>
+                        <th><center>Assigner</center></th>
+                        <th><center>AssignTime</center></th>
+                        <th><center>Status</center></th>
+                        <th><center></center></th>
+                      </tr>
+                      <tr>
+                        <td> <center>{{ i.assignerName }}</center></td>
+                        <td> <center>{{ i.assigntime }}</center></td>
+                        <td> <center>{{ j.status }}</center></td>
+                        <td> <center></center></td>
+                      </tr>
+                    </table>
+                    <br />
+                    <table class="table table-bordered">
+                      <tr>
+                        <th><center>Title</center></th>
+                      </tr>
+                      <tr>
+                        <td> <center>{{ i.title }}</center></td>
+                      </tr>
+                      <tr>
+                        <th><center>Description</center></th>
+                      </tr>
+                      <tr>
+                        <td> <center>{{ i.description }}</center></td>
+                      </tr>
+                    </table>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" style="width:30%;">回訂單</button>
+              </div>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+{% endblock content %}
+
