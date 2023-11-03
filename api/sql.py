@@ -37,10 +37,9 @@ class Filter():
         self.order = 'DESC'
 
     def get_all_member():
-        pass
-
-    def get_all_status():
-        pass
+        # TODO remember to add "all"
+        sql = "SELECT userName FROM GROUP5.TRACKUSER ;"
+        return DB.fetchall(DB.execute_input(DB.prepare(sql)))
 
     def set_member_filter(self):
         pass
@@ -58,25 +57,7 @@ class Filter():
         self.order_by = order_by
         self.order = order
 
-class Member():
-    def get_member(account):
-        sql = "SELECT ACCOUNT, PASSWORD, MID, IDENTITY, NAME FROM MEMBER WHERE ACCOUNT = :id"
-        return DB.fetchall(DB.execute_input(DB.prepare(sql), {'id' : account}))
-    
-    def get_all_account():
-        sql = "SELECT ACCOUNT FROM MEMBER"
-        return DB.fetchall(DB.execute(DB.connect(), sql))
-
-    def create_member(input):
-        sql = 'INSERT INTO MEMBER VALUES (null, :name, :account, :password, :identity)'
-        DB.execute_input(DB.prepare(sql), input)
-        DB.commit()
-    
-    def delete_product(tno, pid):
-        sql = 'DELETE FROM RECORD WHERE TNO=:tno and PID=:pid '
-        DB.execute_input(DB.prepare(sql), {'tno': tno, 'pid':pid})
-        DB.commit()
-        
+class Issue():
     def list_issue(user_filter: Filter):
         """Lists all tasks.
 
@@ -122,16 +103,60 @@ class Member():
         Returns:
             task details
         """
-        # TODO modify the SELECT *
-        sql = 'SELECT * FROM TASK AS t
+        # TODO DUEDATE
+        sql = 'SELECT t.*,
+                      u_owner.userName as ownerName,
+                      u_assigner.userName as assignerName,
+                      u_creator.userName as creatorName
+               FROM TASK AS t
                LEFT JOIN TRACKUSER AS u_owner ON t.taskowner = u_owner.uId
                LEFT JOIN TRACKUSER AS u_assigner ON t.assigner = u_assigner.uId
                LEFT JOIN TRACKUSER AS u_creator ON t.creator = u_creator.uId
                LEFT JOIN TASKCOMMENT AS c ON t.tId = c.tId
-               WHERE TID = :taskid'
+               WHERE t.tId = :taskid'
         return DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'taskid': taskid}))
+class Comment():
+    def __init__(self, taskid):
+        self.task_id = taskid
 
+    def get_all_comments(self):
+        """Get all comments for a task_id"""
+        # TODO make dates pretty format
+        # TODO get commenter name using LEFT JOIN
+        sql = 'SELECT c.*, u.userName 
+               FROM TASK AS t
+               LEFT JOIN TASKCOMMENT AS c ON t.tId = c.taskId
+               LEFT JOIN TRASKUSER AS u ON c.commenterId = u.uId
+               WHERE t.tId = :taskid'
+        return DB.fetchall(DB.execute_input(DB.prepare(sql),
+                                            {'taskid': self.taskid}))
+
+    def add_comment(self, data: str):
+        """Add a comment"""
+
+    def delete_comment(self, comment_id):
+        pass
+
+class Member():
+    def get_member(account):
+        sql = "SELECT ACCOUNT, PASSWORD, MID, IDENTITY, NAME FROM MEMBER WHERE ACCOUNT = :id"
+        return DB.fetchall(DB.execute_input(DB.prepare(sql), {'id' : account}))
+    
+    def get_all_account():
+        sql = "SELECT ACCOUNT FROM MEMBER"
+        return DB.fetchall(DB.execute(DB.connect(), sql))
+
+    def create_member(input):
+        sql = 'INSERT INTO MEMBER VALUES (null, :name, :account, :password, :identity)'
+        DB.execute_input(DB.prepare(sql), input)
+        DB.commit()
+    
+    def delete_product(tno, pid):
+        sql = 'DELETE FROM RECORD WHERE TNO=:tno and PID=:pid '
+        DB.execute_input(DB.prepare(sql), {'tno': tno, 'pid':pid})
+        DB.commit()
+        
     def get_order(userid):
         sql = 'SELECT * FROM ORDER_LIST WHERE MID = :id ORDER BY ORDERTIME DESC'
         return DB.fetchall(DB.execute_input( DB.prepare(sql), {'id':userid}))

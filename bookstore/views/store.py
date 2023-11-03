@@ -11,11 +11,55 @@ from sqlalchemy import null
 from link import *
 import math
 from base64 import b64encode
-from api.sql import Member, Order_List, Product, Record, Cart
+from api.sql import Member, Order_List, Product, Record, Cart, Filter, Issue, Comment
 
 store = Blueprint('bookstore', __name__, template_folder='../templates')
 
 @store.route('/', methods=['GET', 'POST'])
+@login_required
+def search_filter():
+    my_filter = Filter()
+    action = request.args.get('action', None)
+    current_issue_list = request.args.get('issue_list', [])
+    if action == "get_all_member":
+        member_list = my_filter.get_all_member()
+        return render_template('viewissue.html', member_list = member_list,
+                               issue_list = current_issue_list)    
+
+@login_required
+def render_issue():
+    """Shows issue details per provided id; otherwise show issue list per filter."""
+    my_issue = Issue()
+    issue_id = request.args.get('id', None)
+    user_filter = request.args.get('filter', None)
+    if issue_id is not None:
+        target_data = my_issue.show_issue_detail(taskid)
+        # taskOwner, assigner, and creator are the ids of those people
+        # ownerName, assignerName, and creatorName are the names
+        data_items = ['taskId', 'status', 'description', 'taskOwner', 'title',
+                      'dueDate', 'assigner', 'creator', 'assigntime',
+                      'ownerName', 'assignerName', 'creatorName']
+        target_issue = dict(zip(data_items, target_data))
+
+        # get comments
+        target_issue['commentList'] = []
+        issue_comment = Comment(issue_id)
+        comment_items = ['commentId', 'commenterId', 'taskId', 'content',
+                         'commentTime', 'lastUpdateTime', 'commenterName']
+        for comment_entry in issue_comment.get_all_comments():
+            target_issue['commentList'].append(dict(zip(comment_items,
+                                                        comment_data)))
+        return render_template('issuedetail.html', issue_detail = target_issue)
+
+    # get list of issues
+    filtered_issue_data = my_issue.list_issue(user_filter)
+    issue_items = ['taskId', 'status', 'description', 'taskOwner', 'title',
+                  'dueDate', 'assigner', 'creator', 'assigntime']
+    filtered_issue_list = []
+    for issue_data in filtered_issue_data:
+        filtered_issue_list.append(dict(zip(issue_items, issue_data)))
+    return render_template('viewissue.html', issue_list = filtered_issue_list)
+
 @login_required
 def bookstore():
     result = Product.count()
