@@ -35,10 +35,15 @@ class Filter():
         self.keyword = ''
         self.order_by = 'due date'
         self.order = 'DESC'
+        self.featureId = None
 
     def get_all_member():
         # TODO remember to add "all"
         sql = "SELECT userName FROM GROUP5.TRACKUSER ;"
+        return DB.fetchall(DB.execute_input(DB.prepare(sql)))
+
+    def get_all_feature():
+        sql = "SELECT userName FROM GROUP5.FEATURE ;"
         return DB.fetchall(DB.execute_input(DB.prepare(sql)))
 
     def set_member_filter(self):
@@ -47,15 +52,59 @@ class Filter():
     def set_status_filter(self):
         pass
 
-    def set_keyword(self):
-        pass
+    def set_keyword(self, keyword):
+        self.keyword = keyword
 
-    def set_keyword(self):
-        pass
+    def set_feature(self, feature):
+        self.featureId = featureId
 
     def set_order(self, order_by, order) -> None:
         self.order_by = order_by
         self.order = order
+
+class Feature():
+    def __init__(self, featureId = None, keyword: str = None):
+        self.featureId = featureId
+        self.keyword = keyword
+
+    def list_features():
+        sql = "SELECT f.*,
+                      u_creator.userName as creatorName,
+                      u_maintainer.userName as maintainerName,
+               FROM FEATURE AS f
+               LEFT JOIN TRACKUSER AS u_creator ON f.creatorId = u_creator.uId
+               LEFT JOIN TRACKUSER AS u_maintainer ON t.maintainerId = u_maintainer.uId
+               WHERE f.title LIKE '%:keyword%'
+               OR f.descript LIKE '%:keyword%'"
+        return DB.fetchall(DB.execute_input(DB.prepare(sql),
+                                            {'keyword': self.keyword}))
+
+
+    def get_details():
+        sql = 'SELECT f.*,
+                      u_creator.userName as creatorName,
+                      u_maintainer.userName as maintainerName,
+               FROM FEATURE AS f
+               LEFT JOIN TRACKUSER AS u_creator ON f.creatorId = u_creator.uId
+               LEFT JOIN TRACKUSER AS u_maintainer ON t.maintainerId = u_maintainer.uId
+               WHERE f.featuerId = :featureId'
+        return DB.fetchall(DB.execute_input(DB.prepare(sql),
+                                            {'featureId': self.featureId}))
+
+    def list_tasks():
+        """Get details of feature.
+
+        Returns:
+        - all details of tasks belonging to this feature
+        """
+        # TODO modify to show names, no filter
+        sql = "SELECT t.*,
+               FROM FEATURE AS f,
+               LEFT JOIN FEATURETASKRELATION AS r ON f.featureId = r.featureId
+               LEFT JOIN TASK AS t ON r.taskId = t.taskId
+               WHERE f.featureId = :featureId"
+        return DB.fetchall(DB.execute_input(DB.prepare(sql),
+                                            {'featureid': self.featureId}))
 
 class Issue():
     def list_issue(user_filter: Filter):
@@ -78,7 +127,6 @@ class Issue():
         Returns:
             filtered tasks
         """
-        # TODO modify the SELECT *
         sql = "SELECT * FROM TASK
                WHERE MID LIKE :id
                AND STATUS LIKE :status

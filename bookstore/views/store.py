@@ -28,10 +28,21 @@ def search_filter():
 
 @login_required
 def render_issue():
-    """Shows issue details per provided id; otherwise show issue list per filter."""
+    """Shows issue details per provided id; otherwise show issue list per filter.
+
+    issue = task. My bad.
+    """
     my_issue = Issue()
     issue_id = request.args.get('id', None)
     user_filter = request.args.get('filter', None)
+    feature_id = request.args.get('feature_id', None)
+    keyword = request.arg.get('keyword', None)
+    my_feature = Feature(feature_id, keyword)
+    issue_items = ['taskId', 'status', 'description', 'taskOwner', 'title',
+                  'dueDate', 'assigner', 'creator', 'assigntime']
+    feature_items = ['featureId','creatorId','maintainerId','title',
+                     'description','creator','maintainer']
+
     if issue_id is not None:
         target_data = my_issue.show_issue_detail(taskid)
         # taskOwner, assigner, and creator are the ids of those people
@@ -51,14 +62,32 @@ def render_issue():
                                                         comment_data)))
         return render_template('issuedetail.html', issue_detail = target_issue)
 
-    # get list of issues
+    # if feature is specified, get feature details and the list of issues
+    if feature_id is not None:
+        target_data = Feature.get_details()
+        target_feature = dict(zip(feature_items, target_data))
+
+        # list tasks related to feature
+        task_list = []
+        for task_data in my_feature.list_tasks():
+            task_list.append(dict(zip(issue_items, task_data)))
+        return render_template('featuredetail.html',
+                               feature_detail = feature_detail,
+                               issue_list = task_list)
+    # list features
+    feature_list = []
+    for feature_data in my_feature.list_features():
+        feature_list.append(dict(zip(feature_items, feature_data)))
+    return render_tempate('viewfeature.html',
+                          feature_list = feature_list)
+
+    # list issues
     filtered_issue_data = my_issue.list_issue(user_filter)
-    issue_items = ['taskId', 'status', 'description', 'taskOwner', 'title',
-                  'dueDate', 'assigner', 'creator', 'assigntime']
     filtered_issue_list = []
     for issue_data in filtered_issue_data:
         filtered_issue_list.append(dict(zip(issue_items, issue_data)))
-    return render_template('viewissue.html', issue_list = filtered_issue_list)
+    return render_template('viewissue.html',
+                           issue_list = filtered_issue_list)
 
 @login_required
 def bookstore():
