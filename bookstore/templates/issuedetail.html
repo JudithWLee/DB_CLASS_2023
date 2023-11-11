@@ -16,52 +16,124 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
+                <form  method='post' action={{ url_for('bookstore.issuedetail.save') }} ></form>
                   <div class="mb-3">
-                    <table class="table table-bordered">
-                      <tr>
-                        <th><center>taskID</center></th>
-                        <th><center>Creator</center></th>
-                        <th><center>Owner</center></th>
-                        <th><center>dueDate</center></th>
-                      </tr>
-                      <tr>
-                        <td> <center>{{ i.taskId }}</center></td>
-                        <td> <center>{{ i.creatorName }}</center></td>
-                        <td> <center>{{ j.ownerName }}</center></td>
-                        <td> <center>{{ j.dueDate }}</center></td>
-                      </tr>
-                      <tr>
-                        <th><center>Assigner</center></th>
-                        <th><center>AssignTime</center></th>
-                        <th><center>Status</center></th>
-                        <th><center></center></th>
-                      </tr>
-                      <tr>
-                        <td> <center>{{ i.assignerName }}</center></td>
-                        <td> <center>{{ i.assigntime }}</center></td>
-                        <td> <center>{{ j.status }}</center></td>
-                        <td> <center></center></td>
-                      </tr>
-                    </table>
+                    <div name="LV1_button">
+                      <form  method='post' action={{ url_for('bookstore.issuedetail.newIssue') }} >
+                        <button type="submit" class="btn btn-outline-success register_btn">New issue</button>
+                      </form>
+                      <form  method='post' action={{ url_for('bookstore.issuedetail.edit') }} >
+                        <button type="submit" class="btn btn-outline-primary register_btn">edit</button>
+                      </form>
+                      <form  method='post' action={{ url_for('bookstore.issuedetail.delete') }} >
+                        <button type="submit" class="btn btn-outline-danger register_btn">delete</button>
+                      </form>
+                    </div>
+                    <div name="LV2_button" style="display: none;">
+                        <button type="submit" class="btn btn-outline-primary register_btn">save</button>
+                      <form  method='post' action={{ url_for('bookstore.issuedetail.cancel') }} >
+                        <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
+                      </form>
+                    </div>
                     <br />
-                    <table class="table table-bordered">
-                      <tr>
-                        <th><center>Title</center></th>
-                      </tr>
-                      <tr>
-                        <td> <center>{{ i.title }}</center></td>
-                      </tr>
-                      <tr>
-                        <th><center>Description</center></th>
-                      </tr>
-                      <tr>
-                        <td> <center>{{ i.description }}</center></td>
-                      </tr>
-                    </table>
+                    <div name="divShow">
+                      <table class="table table-bordered">
+                        <tr>
+                          <th><center>taskID</center></th>
+                          <th><center>Creator</center></th>
+                          <th><center>Owner</center></th>
+                          <th><center>dueDate</center></th>
+                        </tr>
+                        <tr>
+                          <td> <center>{{ i.taskId }}</center></td>
+                          <td> <center>{{ i.creatorName }}</center></td>
+                          <td> <center>{{ i.ownerName }}</center></td>
+                          <td> <center>{{ i.dueDate }}</center></td>
+                        </tr>
+                        <tr>
+                          <th><center>Assigner</center></th>
+                          <th><center>AssignTime</center></th>
+                          <th><center>Status</center></th>
+                          <th><center></center></th>
+                        </tr>
+                        <tr>
+                          <td> <center>{{ i.assignerName }}</center></td>
+                          <td> <center>{{ i.assigntime }}</center></td>
+                          <td> <center>{{ i.status }}</center></td>
+                          <td> <center></center></td>
+                        </tr>
+                      </table>
+                      <br />
+                      <table class="table table-bordered">
+                        <tr>
+                          <th><center>Title</center></th>
+                        </tr>
+                        <tr>
+                          <td> <center>{{ i.title }}</center></td>
+                        </tr>
+                        <tr>
+                          <th><center>Description</center></th>
+                        </tr>
+                        <tr>
+                          <td> <center>{{ i.description }}</center></td>
+                        </tr>
+                      </table>
+                    </div>
+                    <div name="divEdit" style="display: none;">
+                      <table class="table table-bordered">
+                        <tr>
+                          <th><center>taskID</center></th>
+                          <th><center>Creator</center></th>
+                          <th><center>Owner</center></th>
+                          <th><center>dueDate</center></th>
+                        </tr>
+                        <tr>
+                          <td> <center></center></td>
+                          <td> <center></center></td>
+                          <td> <center></center></td>
+                          <td> <center><input name="input_dueDate_issuedetail_edit" type="search" class="form-control"></center></td>
+                        </tr>
+                        <tr>
+                          <th><center>Assigner</center></th>
+                          <th><center>AssignTime</center></th>
+                          <th><center>Status</center></th>
+                          <th><center></center></th>
+                        </tr>
+                        <tr>
+                          <td> <center></center></td>
+                          <td> <center></center></td>
+                          <td> <center>
+                            <select class="form-control" name="select_status_issuedetail_edit">                              
+                              <option value="open">open</option>
+                              <option value="inprogress">inprogress</option>
+                              <option value="review">review</option>
+                              <option value="close">close</option>
+                            </select>
+                          </center></td>
+                          <td> <center></center></td>
+                        </tr>
+                      </table>
+                      <br />
+                      <table class="table table-bordered">
+                        <tr>
+                          <th><center>Title</center></th>
+                        </tr>
+                        <tr>
+                          <td><center><input name="input_title_issuedetail_edit" type="search" class="form-control"></center></td>
+                        </tr>
+                        <tr>
+                          <th><center>Description</center></th>
+                        </tr>
+                        <tr>
+                          <td> <center><input name="input_discription_issuedetail_edit" type="search" class="form-control"></center></td>
+                        </tr>
+                      </table>
+                    </div>
                   </div>
               </div>
+            </form>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" style="width:30%;">回訂單</button>
+                  <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" style="width:30%;">back to issue list</button>
               </div>
           </div>
       </div>

@@ -1,0 +1,67 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}User List{% endblock title%}
+
+{% block content %}
+
+<!-- </form> -->
+
+
+
+<br/>
+<div class="container-xl">
+  <form method="post" action={{ url_for('bookstore.viewuser') }}>
+    <form  method='post' action={{ url_for('bookstore.viewuser.search') }} >
+      <div class="row">
+        <div class="col-sm-12">
+          <button type="submit" class="btn btn-outline-primary register_btn">search</button>
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.new_user') }}">New user</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-1" style="text-align: right;">userId:</div>
+        <div class="col-sm-3">
+          <input type="search" name="input_userId_viewuser_search" class="=form-control me-2" placeholder="type user id here">
+        </div>      
+        <div class="col-sm-1" style="text-align: right;">supervisorId:</div>
+        <div class="col-sm-3">
+          <input type="search" name="input_supervisorId_viewuser_search" class="=form-control me-2" placeholder="type supervisor id here">
+        </div>  
+        <div class="col-sm-1" style="text-align: right;">userName:</div>
+        <div class="col-sm-3">
+          <input name="input_userName_viewuser_search" class="form-control me-2" type="search" placeholder="type in user name here" aria-label="Search">
+        </div>
+      </div>
+    </form>
+    <br />
+    <table class="table table-bordered">
+      <tr>
+        <th><center>Fuction</center></th>
+        <th><center>userId</center></th>
+        <th><center>userName</center></th>
+        <th><center>supervisor</center></th>
+      </tr>
+      {% for i in user_list %}
+      <tr>
+        <td width="20%">
+          <center>
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.render_user', id={{i.userId}}) }}">
+              View Detail
+            </button>
+          </center>
+        </td>
+        <td> <center>{{ i.userId }}</center></td>
+        <td> <center>{{ i.userName }}</center></td>
+        <td> <center>{{ i.supervisor }}</center></td>
+      </tr>
+      {% endfor %}
+    </table>
+
+  </form>
+</div>
+
+{% endblock content %}
+
