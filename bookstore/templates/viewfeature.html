@@ -1,0 +1,63 @@
+{% extends "frontstage.html" %}
+{% block head %}
+{{ super() }}
+{% endblock head %}
+
+{% block title %}Feature List{% endblock title%}
+
+{% block content %}
+
+<!-- </form> -->
+
+
+
+<br/>
+<div class="container-xl">
+  <form method="post" action={{ url_for('bookstore.viewfeature') }}>
+    <form  method='post' action={{ url_for('bookstore.viewfeature.search') }} >
+      <div class="row">
+        <div class="col-sm-12">
+          <button type="submit" class="btn btn-outline-primary register_btn">search</button>
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.new_feature') }}">New feature</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-1" style="text-align: right;">featureId:</div>
+        <div class="col-sm-3">
+          <input type="search" name="input_featureId_viewfeature_search" class="=form-control me-2" placeholder="type feature id here">
+        </div>      
+        <div class="col-sm-1" style="text-align: right;">Keyword:</div>
+        <div class="col-sm-3">
+          <input name="input_keyword_viewfeature_search" class="form-control me-2" type="search" placeholder="type in your keyword..." aria-label="Search">
+        </div>
+      </div>
+    </form>
+    <br />
+    <table class="table table-bordered">
+      <tr>
+        <th><center>Fuction</center></th>
+        <th><center>featureId</center></th>
+        <th><center>title</center></th>
+        <th><center>Task number</center></th>
+      </tr>
+      {% for i in feature_list %}
+      <tr>
+        <td width="20%">
+          <center>
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.render_feature', id={{i.featureId}}) }}">
+              View Detail
+            </button>
+          </center>
+        </td>
+        <td> <center>{{ i.featureId }}</center></td>
+        <td> <center>{{ i.title }}</center></td>
+        <td> <center>{{ i.task_number }}</center></td>
+      </tr>
+      {% endfor %}
+    </table>
+
+  </form>
+</div>
+
+{% endblock content %}
+

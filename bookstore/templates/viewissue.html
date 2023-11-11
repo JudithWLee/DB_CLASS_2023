@@ -14,29 +14,34 @@
 <br/>
 <div class="container-xl">
   <form method="post" action={{ url_for('bookstore.viewissue') }}>
-    <div class="row">
-      <div class="col-sm-3"></div>
-    </div>
-    <div class="row">
-      <div class="col-sm-1" style="text-align: right;">TaskOwner:</div>
-      <div class="col-sm-3">
-        <select class="form-control" name="select_taskowner" action={{ url_for('bookstore.search_filter', action=get_all_member) }}></select>        
+    <form  method='post' action={{ url_for('bookstore.viewissue.search') }} >
+      <div class="row">
+        <div class="col-sm-12">
+          <button type="submit" class="btn btn-outline-primary register_btn">search</button>
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.new_issue') }}">New issue</button>
+        </div>
       </div>
-      <div class="col-sm-1" style="text-align: right;">Status:</div>
-      <div class="col-sm-3">
-        <select class="form-control" name="select_status">
-          <option value="all">all</option>
-          <option value="open">open</option>
-          <option value="inprogress">inprogress</option>
-          <option value="review">review</option>
-          <option value="close">close</option>
-        </select>
+      <div class="row">
+        <div class="col-sm-1" style="text-align: right;">TaskOwner:</div>
+        <div class="col-sm-3">
+          <select class="form-control" name="select_taskowner_viewissue_search" action={{ url_for('bookstore.search_filter', action=get_all_member) }}></select>        
+        </div>
+        <div class="col-sm-1" style="text-align: right;">Status:</div>
+        <div class="col-sm-3">
+          <select class="form-control" name="select_status_viewissue_search">
+            <option value="all">all</option>
+            <option value="open">open</option>
+            <option value="inprogress">inprogress</option>
+            <option value="review">review</option>
+            <option value="close">close</option>
+          </select>
+        </div>
+        <div class="col-sm-1" style="text-align: right;">Keyword:</div>
+        <div class="col-sm-3">
+          <input name="input_keyword_viewissue_search" class="form-control me-2" type="search" placeholder="type in your keyword..." aria-label="Search">
+        </div>
       </div>
-      <div class="col-sm-1" style="text-align: right;">Keyword:</div>
-      <div class="col-sm-3">
-        <input name="input_keyword" class="form-control me-2" type="search" placeholder="type in your keyword..." aria-label="Search">
-      </div>
-    </div>
+    </form>
     <br />
     <table class="table table-bordered">
       <tr>
