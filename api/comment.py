@@ -1,5 +1,6 @@
 from link import *
 from api.General import General
+from api.sql import DB
 class Comment(General):
     """Comments belonging to a specific task.
 
@@ -24,9 +25,9 @@ class Comment(General):
         # TODO make dates pretty format
         # TODO get commenter name using LEFT JOIN
         sql = 'SELECT c.*, u.userName \
-               FROM TASK AS t \
-               LEFT JOIN TASKCOMMENT AS c ON t.tId = c.taskId \
-               LEFT JOIN TRASKUSER AS u ON c.commenterId = u."userId" \
+               FROM TASK t \
+               LEFT JOIN TASKCOMMENT c ON t.tId = c.taskId \
+               LEFT JOIN TRASKUSER u ON c.commenterId = u."userId" \
                WHERE t.tId = :taskid'
         return DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'taskid': self.taskid}))

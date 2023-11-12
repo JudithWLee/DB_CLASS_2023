@@ -1,4 +1,5 @@
 from link import *
+from api.sql import DB
 class Filter():
     def __init__(self):
         self.user = '%'

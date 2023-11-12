@@ -1,6 +1,7 @@
 from link import *
 from api.filter import Filter
 from api.General import General
+from api.sql import DB
 class Task(General):
     """AKA issue.
 
@@ -68,16 +69,16 @@ class Task(General):
             task details
         """
         sql = 'SELECT t.taskId, t.status, t.description, t.taskOwner, t.title, \
-                      TO_CHAR(t.dueDate, "YYYY/MM/DD") AS dueDate, \
+                      TO_CHAR(t.dueDate, "YYYY/MM/DD") dueDate, \
                       t.assigner, t.creator, t.assigntime, \
-                      u_owner.userName as ownerName, \
-                      u_assigner.userName as assignerName, \
-                      u_creator.userName as creatorName \
-               FROM TASK AS t \
-               LEFT JOIN TRACKUSER AS u_owner ON t.taskowner = u_owner."userId" \
-               LEFT JOIN TRACKUSER AS u_assigner ON t.assigner = u_assigner."userId" \
-               LEFT JOIN TRACKUSER AS u_creator ON t.creator = u_creator."userId" \
-               LEFT JOIN TASKCOMMENT AS c ON t.taskId = c.taskId \
+                      u_owner.userName ownerName, \
+                      u_assigner.userName assignerName, \
+                      u_creator.userName creatorName \
+               FROM TASK t \
+               LEFT JOIN TRACKUSER u_owner ON t.taskowner = u_owner."userId" \
+               LEFT JOIN TRACKUSER u_assigner ON t.assigner = u_assigner."userId" \
+               LEFT JOIN TRACKUSER u_creator ON t.creator = u_creator."userId" \
+               LEFT JOIN TASKCOMMENT c ON t.taskId = c.taskId \
                WHERE t.taskId = :taskid'
         return DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'taskid': taskid}))

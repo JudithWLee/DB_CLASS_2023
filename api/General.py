@@ -1,4 +1,5 @@
 from link import *
+from api.sql import DB
 class General():
     """Parent class for TrackUser, Task, Comment, and Feature.
 

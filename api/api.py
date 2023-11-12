@@ -3,6 +3,7 @@ from flask import render_template, Blueprint, redirect, request, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from link import *
 from api.sql import *
+from api.user import TrackUser
 
 api = Blueprint('api', __name__, template_folder='./templates')
 
@@ -13,6 +14,7 @@ login_manager.login_message = "請先登入"
 class User(UserMixin):
     pass
 
+# TODO where is this used?
 @login_manager.user_loader
 def user_loader(userid):  
     user = User()
@@ -31,29 +33,24 @@ def login():
 
         account = request.form['account']
         password = request.form['password']
-        data = Member.get_member(account) 
-
-        try:
-            DB_password = data[0][1]
-            user_id = data[0][2]
-            identity = data[0][3]
-
-        except:
-            flash('*沒有此帳號')
+        user = TrackUser(account)
+        data = user.get_password()
+        print(f"password:{data}") # DEBUG
+        #data = user.get_detail()
+        if not data:
+            flash('*Password or account incorrect')
             return redirect(url_for('api.login'))
 
-        if(DB_password == password ):
+        if(data == password ):
             user = User()
-            user.id = user_id
+            user.id = account
             login_user(user)
 
-            if( identity == 'user'):
-                return redirect(url_for('bookstore.bookstore'))
-            else:
-                return redirect(url_for('manager.productManager'))
+            # TODO change url to rendering list issue
+            return redirect(url_for('bookstore.bookstore'))
         
         else:
-            flash('*密碼錯誤，請再試一次')
+            flash('*Password or account incorrect')
             return redirect(url_for('api.login'))
 
     
