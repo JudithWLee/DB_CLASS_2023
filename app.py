@@ -7,6 +7,11 @@ from numpy import identity, product
 from sqlalchemy import null
 from api.api import *
 from api.sql import *
+from api.feature import Feature
+from api.issue import Issue
+from api.comment import Comment
+from api.filter import Filter
+from api.user import TrackUser
 from bookstore.views.store import *
 from backstage.views.manager import *
 from link import *
