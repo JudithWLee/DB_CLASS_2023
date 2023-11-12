@@ -6,6 +6,19 @@
 {% block title %}User Detail{% endblock title%}
 
 {% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages[0] == 'Save error' %}
+  
+<script language="javascript">
+
+  alert('請確認輸入資料的正確性！');
+
+</script>
+
+{% endif %}
+{% endwith %}
+
 <!-- <form method="post" action="#"> -->
   {% for i in user_detail %}
   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -17,10 +30,11 @@
               </div>
               <div class="modal-body">
                 <form  method='post' action={{ url_for('bookstore.userdetail.save') }} >
+                  <input type="hidden" value="{{i.userId}}" name="input_userId_userdetail_edit">
                   <div class="mb-3">
                     <div name="LV1_button">
                       <form  method='post' action={{ url_for('bookstore.userdetail.newUser') }} >
-                        <button type="submit" class="btn btn-outline-success register_btn">New feature</button>
+                        <button type="submit" class="btn btn-outline-success register_btn">New User</button>
                       </form>
                       <form  method='post' action={{ url_for('bookstore.userdetail.edit') }} >
                         <button type="submit" class="btn btn-outline-primary register_btn">edit</button>
@@ -99,7 +113,9 @@
                 </form>
               </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" style="width:30%;">back to feature list</button>
+                <form  method='post' action={{ url_for('bookstore.userdetail.BackToList') }} >
+                  <button type="submit" class="btn btn-outline-success" data-bs-dismiss="modal" style="width:30%;">back to user list</button>
+                </form>
               </div>
           </div>
       </div>
