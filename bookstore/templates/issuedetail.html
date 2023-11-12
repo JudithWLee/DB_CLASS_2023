@@ -16,7 +16,7 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form  method='post' action={{ url_for('bookstore.issuedetail.save') }} ></form>
+                <form  method='post' action={{ url_for('bookstore.issuedetail.save') }} >
                   <div class="mb-3">
                     <div name="LV1_button">
                       <form  method='post' action={{ url_for('bookstore.issuedetail.newIssue') }} >
@@ -88,9 +88,9 @@
                           <th><center>dueDate</center></th>
                         </tr>
                         <tr>
-                          <td> <center></center></td>
-                          <td> <center></center></td>
-                          <td> <center></center></td>
+                          <td> <center>{{i.taskId}}</center></td>
+                          <td> <center>{{ i.creatorName }}</center></td>
+                          <td> <center><input name="input_Owner_issuedetail_edit" type="search" class="form-control"></center></td>
                           <td> <center><input name="input_dueDate_issuedetail_edit" type="search" class="form-control"></center></td>
                         </tr>
                         <tr>
@@ -100,8 +100,8 @@
                           <th><center></center></th>
                         </tr>
                         <tr>
-                          <td> <center></center></td>
-                          <td> <center></center></td>
+                          <td> <center>{{ i.assignerName }}</center></td>
+                          <td> <center>{{ i.assigntime }}</center></td>
                           <td> <center>
                             <select class="form-control" name="select_status_issuedetail_edit">                              
                               <option value="open">open</option>
@@ -130,8 +130,63 @@
                       </table>
                     </div>
                   </div>
+                </form>
+                {% for j in comment_list %}
+                <div class="card" style="margin-top: 10px;">
+                  <div class="card-header">
+                    Comment &nbsp&nbsp Id:{{j.commentId}} &nbsp&nbsp&nbsp&nbsp
+                    <form  method='post' action={{ url_for('bookstore.issuedetail.deletecomment', id={{j.commentId}}) }} >
+                      <button type="submit" class="btn btn-outline-primary register_btn">Delete</button>
+                    </form>
+                  </div>
+                   <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-2">
+                        Commenter:
+                      </div>
+                      <div class="col-sm-10">
+                        {{j.commenterName}}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-2">
+                        CommentTime:
+                      </div>
+                      <div class="col-sm-10">
+                        {{j.commentTime}}
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-2">
+                        Comment:&nbsp                        
+                      </div>
+                      <div class="col-sm-10">
+                        <textarea rows="4" cols="50">{{j.content}}</textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+                <div class="card" style="margin-top: 10px;">
+                  <div class="card-header">
+                    Your Comment
+                  </div>
+                  <div class="card-body">
+                    <form  method='post' action={{ url_for('bookstore.issuedetail.Comment') }} >
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <textarea id="content" name="content" rows="4" cols="50"></textarea>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
               </div>
-            </form>
               <div class="modal-footer">
                   <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" style="width:30%;">back to issue list</button>
               </div>
