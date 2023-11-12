@@ -1,7 +1,8 @@
 from link import *
 from api.filter import Filter
-class Issue():
-    """AKA task.
+from api.General import General
+class Task(General):
+    """AKA issue.
 
     Attributes:
       taskId: the id of the task
@@ -15,7 +16,14 @@ class Issue():
       creator: the person created the task
       assigntime: when the task was assigned
     """
-    def list_issue(user_filter: Filter):
+    def __init__(self, item_id):
+        self.taskId = taskId
+        self.table_name = "Task"
+        self.attributes = ["taskId","status","description","taskOwner","title",
+                           "dueDate","assigner","creator","assigntime"]
+        self.primary = "taskId"
+
+    def list_item(user_filter: Filter):
         """Lists all tasks.
 
         By default, list all tasks available in order of task id;
@@ -36,7 +44,7 @@ class Issue():
             filtered tasks
         """
         sql = "SELECT * FROM TASK \
-               WHERE MID LIKE :id \
+               WHERE TASKOWNER LIKE :id \
                AND STATUS LIKE :status \
                AND TITLE LIKE '%:keyword%' \
                ORDER BY :order_by :order"
@@ -50,8 +58,8 @@ class Issue():
     # TASKCOMMENT
     # TASK
     # TRACKUSER
-    def show_issue_detail(taskid):
-        """Show issue detail based on taskid.
+    def get_detail(taskid):
+        """Show task detail based on taskid.
 
         Args:
             taskid (int): the id of the task
@@ -59,17 +67,18 @@ class Issue():
         Returns:
             task details
         """
-        # TODO DUEDATE
-        sql = 'SELECT t.*, \
+        sql = 'SELECT t.taskId, t.status, t.description, t.taskOwner, t.title, \
+                      TO_CHAR(t.dueDate, "YYYY/MM/DD") AS dueDate, \
+                      t.assigner, t.creator, t.assigntime, \
                       u_owner.userName as ownerName, \
                       u_assigner.userName as assignerName, \
                       u_creator.userName as creatorName \
                FROM TASK AS t \
-               LEFT JOIN TRACKUSER AS u_owner ON t.taskowner = u_owner.uId \
-               LEFT JOIN TRACKUSER AS u_assigner ON t.assigner = u_assigner.uId \
-               LEFT JOIN TRACKUSER AS u_creator ON t.creator = u_creator.uId \
-               LEFT JOIN TASKCOMMENT AS c ON t.tId = c.tId \
-               WHERE t.tId = :taskid'
+               LEFT JOIN TRACKUSER AS u_owner ON t.taskowner = u_owner."userId" \
+               LEFT JOIN TRACKUSER AS u_assigner ON t.assigner = u_assigner."userId" \
+               LEFT JOIN TRACKUSER AS u_creator ON t.creator = u_creator."userId" \
+               LEFT JOIN TASKCOMMENT AS c ON t.taskId = c.taskId \
+               WHERE t.taskId = :taskid'
         return DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'taskid': taskid}))
 

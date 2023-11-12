@@ -13,7 +13,7 @@ import math
 from base64 import b64encode
 from api.sql import Member, Order_List, Product, Record, Cart
 from api.feature import Feature
-from api.issue import Issue
+from api.task import Task
 from api.comment import Comment
 from api.filter import Filter
 from api.user import TrackUser
@@ -355,6 +355,10 @@ def orderlist():
 
 
     return render_template('orderlist.html', data=orderlist, detail=orderdetail, user=current_user.name)
+
+@store.route('/viewuser')
+def viewuser():
+    pass
 
 @store.route('/viewissue')
 def viewissue():
