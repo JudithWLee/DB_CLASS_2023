@@ -298,6 +298,7 @@ def orderlist():
 def viewuser():
     pass
 
+@login_required
 @store.route('/list_table')
 def list_table():
     # we use another function for task as it requires filter
@@ -314,6 +315,8 @@ def list_table():
 
     my_table = table_class[target_table]()
     target_data = my_table.list_items()
+    if target_data is None:
+        target_data = []
     return render_template(my_table.list_page, item_list = target_data)
 
 def list_task(args: dict):
@@ -324,6 +327,7 @@ def list_task(args: dict):
     data = my_table.list_item(my_filter)
     return render_template(my_table.list_page, item_list = data)
 
+@login_required
 @store.route('/show_detail')
 def show_detail():
     print("show detail called") # DEBUG
@@ -341,6 +345,7 @@ def show_detail():
     print(my_table.detail_page) # DEBUG
     return render_template(my_table.detail_page, item_detail = target_data)
 
+@login_required
 @store.route('/empty_form')
 def empty_form():
     table_class = {
@@ -354,6 +359,17 @@ def empty_form():
     empty_data = my_table.empty_form()
     return render_template(my_table.detail_page, form = empty_data)
 
+# TODO finish
+@store.route('/delete')
+def delete():
+    pass
+
+# TODO finish
+@store.route('/edit')
+def edit():
+    pass
+
+@login_required
 @store.route('/save')
 def save():
     table_class = {
