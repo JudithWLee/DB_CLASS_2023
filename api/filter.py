@@ -12,6 +12,7 @@ class Filter():
     def get_all_member():
         # TODO remember to add "all"
         sql = "SELECT userName FROM GROUP5.TRACKUSER ;"
+        print("in get_all_member") # DEBUG
         return DB.fetchall(DB.execute_input(DB.prepare(sql)))
 
     def get_all_feature():

@@ -18,13 +18,13 @@
       <div class="row">
         <div class="col-sm-12">
           <button type="submit" class="btn btn-outline-primary register_btn">search</button>
-          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.create', target_table = "task") }}">New issue</button>
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.empty_form', target_table = "task") }}">New issue</button>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-1" style="text-align: right;">TaskOwner:</div>
         <div class="col-sm-3">
-          <select class="form-control" name="select_taskowner_viewissue_search" action={{ url_for('bookstore.search_filter', action=get_all_member) }}></select>        
+          <select class="form-control" name="select_taskowner_viewissue_search" action={{ url_for('bookstore.search_filter', action=get_all_member, issue_list=issue_list) }}></select>        
         </div>
         <div class="col-sm-1" style="text-align: right;">Status:</div>
         <div class="col-sm-3">
@@ -52,7 +52,7 @@
         <th><center>taskOwner</center></th>        
         <th><center>dueDate</center></th>
       </tr>
-      {% for i in issue_list %}
+      {% for i in item_list %}
       <tr>
         <td width="20%">
           <center>

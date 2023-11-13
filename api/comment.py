@@ -35,4 +35,7 @@ class Comment(General):
                WHERE t.tId = :taskid'
         data =  DB.fetchall(DB.execute_input(DB.prepare(sql),
                                              {'taskid': self.taskid}))
-        return dict(zip(title, data))
+        data_list = []
+        for entry in data:
+            data_list.append(dict(zip(title, data[0])))
+        return data_list

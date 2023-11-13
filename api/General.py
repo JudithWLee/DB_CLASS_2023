@@ -25,6 +25,32 @@ class General():
         requires LEFT JOIN.
         """
 
+    def empty_form(self):
+        """Create empty form for creating new item.  """
+        item_data = {}
+        for attr in self.attributes:
+            item_data[attr] = ''
+
+        if self.generate_id:
+            item_id = self._gen_id()
+            item_data[self.primary] = item_id
+
+        return item_data
+
+    def _gen_id(self):
+        sql=f'SELECT {self.primary} \
+             FROM {self.table_name} \
+             WHERE {self.primary} = ( \
+                 SELECT MAX(TO_NUMBER({self.primary}) DEFAULT NULL ON CONVERSION ERROR) \
+                 FROM {self.table_name} \
+             )'
+        data = DB.fetchall(DB.execute(DB.connect(), sql))
+        if not data:
+            item_id = 0
+        else:
+            item_id = data[0][0] + 1
+        return item_id
+
     def create(self, item_data: dict):
         """Create new entry.
 
@@ -34,17 +60,7 @@ class General():
         """
         # generate id if needed
         if self.generate_id:
-            sql=f'SELECT {self.primary} \
-                 FROM {self.table_name} \
-                 WHERE {self.primary} = ( \
-                     SELECT MAX(TO_NUMBER({self.primary}) DEFAULT NULL ON CONVERSION ERROR) \
-                     FROM {self.table_name} \
-                 )'
-            data = DB.fetchall(DB.execute(DB.connect(), sql))
-            if not data:
-                item_data[self.primary] = 0
-            else:
-                item_data[self.primary] = data[0][0] + 1
+            item_data[self.primary] = self._gen_id()
 
         sql = f'INSERT INTO GROUP5.{self.table_name} ('
         for attr in self.attributes[:-1]:
@@ -55,7 +71,7 @@ class General():
             # set values
             value_sql += f':{attr},'
         attr_sql += f'"{self.attributes[-1]}")'
-        value_sql += f':{self.attributes[-1]})'
+        value_sql += f':{self.attributes[-1]}) '
 
         sql += attr_sql
         sql += 'VALUES ('
@@ -63,6 +79,7 @@ class General():
 
         DB.execute_input(DB.prepare(sql),
                          item_data)
+        return item_data[self.primary]
 
     def edit(self, item_data: dict):
         """Update table entry.
@@ -76,8 +93,9 @@ class General():
             sql += f'"{attr}" = '
             sql += f"'{value}',"
         sql += f'"{list(item_data.keys())[-1]}" = '
-        sql += f"'{list(item_data.values())[-1]}',"
+        sql += f"'{list(item_data.values())[-1]}' "
         sql += 'WHERE "{self.primary}" = {item_data[self.primary]}'
+        return item_data[self.primary]
 
     def save(self, item_data: dict):
         """Save data input by user.
@@ -94,6 +112,8 @@ class General():
         count = DB.execute_input(prepared_sql)
         # call corresponding function
         if count:
-            self.edit(item_data)
+            item_id = self.edit(item_data)
         else:
-            self.create(item_data)
+            item_id = self.create(item_data)
+
+        return item_id

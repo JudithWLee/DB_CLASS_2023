@@ -13,12 +13,12 @@
 
 <br/>
 <div class="container-xl">
-  <form method="post" action={{ url_for('bookstore.viewfeature') }}>
-    <form  method='post' action={{ url_for('bookstore.viewfeature.search') }} >
+  <form method="post" action={{ url_for('bookstore.list_table', target_table = "feature") }}>
+    <form  method='post' action={{ url_for('bookstore.list_table', target_table = "feature") }} >
       <div class="row">
         <div class="col-sm-12">
           <button type="submit" class="btn btn-outline-primary register_btn">search</button>
-          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.new_feature') }}">New feature</button>
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.empty_form', target_table="feature") }}">New feature</button>
         </div>
       </div>
       <div class="row">

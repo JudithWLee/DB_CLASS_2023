@@ -27,6 +27,9 @@ class Task(General):
         self.detail_page = "issuedetail.html"
         self.generate_id = True
 
+    def debugger(self, msg):
+        print(msg)
+
     def list_item(self, user_filter: Filter):
         """Lists all tasks.
 
@@ -49,17 +52,21 @@ class Task(General):
         """
         title = self.attributes.copy()
         title.append('ownerName')
-        sql = "SELECT t.*, u_owner.userName ownerName "
+        data_list = []
+        sql = 'SELECT t."taskId", t.status, t.description, t.taskOwner, t.title, '
+        sql += "      TO_CHAR(t.dueDate, 'YYYY/MM/DD') dueDate, \
+                      t.assigner, t.creator, TO_CHAR(t.assigntime, 'YYYY/MM/DD') assignTime, \
+                      u_owner.userName ownerName "
         sql += 'FROM TASK t '
         sql += 'LEFT JOIN TRACKUSER u_owner ON t.taskowner = u_owner."userId" '
         sql += f"WHERE u_owner.userName LIKE '{user_filter.user}' \
                 AND t.STATUS LIKE '{user_filter.status}' \
                 AND t.TITLE LIKE '%{user_filter.keyword}%' \
                 ORDER BY {user_filter.order_by} {user_filter.order}"
-        print(sql)
         data = DB.fetchall(DB.execute(DB.connect(), sql))
-        print(data) # DEBUG
-        return dict(zip(title, data))
+        for entry in data:
+            data_list.append(dict(zip(title, data[0])))
+        return data_list
 
     # TASKCOMMENT
     # TASK
@@ -75,19 +82,19 @@ class Task(General):
         """
         title = self.attributes.copy()
         title.extend(['ownerName', 'assignerName','creatorName'])
-        sql = 'SELECT t.taskId, t.status, t.description, t.taskOwner, t.title, \
-                      TO_CHAR(t.dueDate, "YYYY/MM/DD") dueDate, \
-                      t.assigner, t.creator, t.assigntime, \
+        sql = 'SELECT t."taskId", t.status, t.description, t.taskOwner, t.title, '
+        sql += "      TO_CHAR(t.dueDate, 'YYYY/MM/DD') dueDate, \
+                      t.assigner, t.creator, TO_CHAR(t.assigntime, 'YYYY/MM/DD') assignTime, \
                       u_owner.userName ownerName, \
                       u_assigner.userName assignerName, \
                       u_creator.userName creatorName \
-               FROM TASK t \
-               LEFT JOIN TRACKUSER u_owner ON t.taskowner = u_owner."userId" \
+               FROM TASK t "
+        sql += 'EFT JOIN TRACKUSER u_owner ON t.taskowner = u_owner."userId" \
                LEFT JOIN TRACKUSER u_assigner ON t.assigner = u_assigner."userId" \
                LEFT JOIN TRACKUSER u_creator ON t.creator = u_creator."userId" \
                LEFT JOIN TASKCOMMENT c ON t.taskId = c.taskId \
                WHERE t.taskId = :taskid'
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'taskid': taskid}))
-        return dict(zip(title, data))
+        return dict(zip(title, data[0]))
 

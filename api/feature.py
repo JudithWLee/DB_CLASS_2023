@@ -18,7 +18,7 @@ class Feature(General):
       title: feature title
       description: feature description
     """
-    def __init__(self, item_id: None):
+    def __init__(self, item_id = None):
         self.featureId = item_id
         self.table_name = "FEATURE"
         self.attributes = ["featureId", "creatorId", "maintainerId", "title",
@@ -43,10 +43,13 @@ class Feature(General):
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'keyword': keyword,
                                              'featureId': featureId}))
-        return dict(zip(title, data))
+        data_list = []
+        for entry in data:
+            data_list.append(dict(zip(title, data[0])))
+        return data_list
 
 
-    def get_details(self):
+    def get_details(self, featureId):
         title = self.attributes.copy()
         title.extend(["creatorName", "maintainerName"])
         sql = 'SELECT f.*, \
@@ -57,8 +60,8 @@ class Feature(General):
                LEFT JOIN TRACKUSER u_maintainer ON t.maintainerId = u_maintainer."userId" \
                WHERE f.featuerId = :featureId'
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
-                                            {'featureId': self.featureId}))
-        return dict(zip(title, data))
+                                            {'featureId': featureId}))
+        return dict(zip(title, data[0]))
 
     def list_tasks(self):
         """Get details of feature.
@@ -76,4 +79,7 @@ class Feature(General):
                WHERE f.featureId = :featureId'
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'featureid': self.featureId}))
-        return dict(zip(title, data))
+        data_list = []
+        for entry in data:
+            data_list.append(dict(zip(title, data[0])))
+        return data_list

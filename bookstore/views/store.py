@@ -1,4 +1,5 @@
 import re
+import inspect
 from typing_extensions import Self
 from flask import Flask, request, template_rendered, Blueprint
 from flask import url_for, redirect, flash
@@ -30,70 +31,6 @@ def search_filter():
         member_list = my_filter.get_all_member()
         return render_template('viewissue.html', member_list = member_list,
                                issue_list = current_issue_list)    
-
-@login_required
-@store.route('/viewissue')
-def viewissue():
-    """Shows issue details per provided id; otherwise show issue list per filter.
-
-    issue = task. My bad.
-    """
-    my_issue = Issue()
-    issue_id = request.args.get('id', None)
-    user_filter = request.args.get('filter', None)
-    feature_id = request.args.get('feature_id', None)
-    keyword = request.arg.get('keyword', None)
-    my_feature = Feature(feature_id, keyword)
-    issue_items = ['taskId', 'status', 'description', 'taskOwner', 'title',
-                  'dueDate', 'assigner', 'creator', 'assigntime']
-    feature_items = ['featureId','creatorId','maintainerId','title',
-                     'description','creator','maintainer']
-
-    if issue_id is not None:
-        target_data = my_issue.show_issue_detail(taskid)
-        # taskOwner, assigner, and creator are the ids of those people
-        # ownerName, assignerName, and creatorName are the names
-        data_items = ['taskId', 'status', 'description', 'taskOwner', 'title',
-                      'dueDate', 'assigner', 'creator', 'assigntime',
-                      'ownerName', 'assignerName', 'creatorName']
-        target_issue = dict(zip(data_items, target_data))
-
-        # get comments
-        target_issue['commentList'] = []
-        issue_comment = Comment(issue_id)
-        comment_items = ['commentId', 'commenterId', 'taskId', 'content',
-                         'commentTime', 'lastUpdateTime', 'commenterName']
-        for comment_entry in issue_comment.get_all_comments():
-            target_issue['commentList'].append(dict(zip(comment_items,
-                                                        comment_data)))
-        return render_template('issuedetail.html', issue_detail = target_issue)
-
-    # if feature is specified, get feature details and the list of issues
-    if feature_id is not None:
-        target_data = Feature.get_details()
-        target_feature = dict(zip(feature_items, target_data))
-
-        # list tasks related to feature
-        task_list = []
-        for task_data in my_feature.list_tasks():
-            task_list.append(dict(zip(issue_items, task_data)))
-        return render_template('featuredetail.html',
-                               feature_detail = feature_detail,
-                               issue_list = task_list)
-    # list features
-    feature_list = []
-    for feature_data in my_feature.list_features():
-        feature_list.append(dict(zip(feature_items, feature_data)))
-    return render_tempate('viewfeature.html',
-                          feature_list = feature_list)
-
-    # list issues
-    filtered_issue_data = my_issue.list_issue(user_filter)
-    filtered_issue_list = []
-    for issue_data in filtered_issue_data:
-        filtered_issue_list.append(dict(zip(issue_items, issue_data)))
-    return render_template('viewissue.html',
-                           issue_list = filtered_issue_list)
 
 @login_required
 def bookstore():
@@ -372,12 +309,12 @@ def list_table():
     }
     # to make it case insensitive just in case
     target_table = request.args["target_table"].lower()
-    if callable(table_class[target_table]):
+    if not inspect.isclass(table_class[target_table]):
         return table_class[target_table](request.args)
 
     my_table = table_class[target_table]()
-    target_data = my_table.get_detail()
-    return render_template(my_table.list_page, data = target_data)
+    target_data = my_table.list_items()
+    return render_template(my_table.list_page, item_list = target_data)
 
 def list_task(args: dict):
     # TODO finish filter implementation
@@ -385,7 +322,7 @@ def list_task(args: dict):
     my_filter = Filter()
     my_table = Task()
     data = my_table.list_item(my_filter)
-    return render_template(my_table.list_page, data = data)
+    return render_template(my_table.list_page, item_list = data)
 
 @store.route('/show_detail')
 def show_detail():
@@ -399,10 +336,10 @@ def show_detail():
     item_id = request.args["id"]
     my_table = table_class[target_table](item_id)
     target_data = my_table.get_detail(item_id)
-    return render_template(my_table.detail_page, data = target_data)
+    return render_template(my_table.detail_page, item_detail = target_data)
 
-@store.route('/create')
-def create():
+@store.route('/empty_form')
+def empty_form():
     table_class = {
         "task": Task,
         "issue": Task,
@@ -410,6 +347,24 @@ def create():
         "feature": Feature
     }
     target_table = request.args["target_table"].lower()
+    my_table = table_class[target_table](item_id)
+    empty_data = my_table.empty_form()
+    return render_template(my_table.detail_page, form = empty_data)
+
+@store.route('/save')
+def save():
+    table_class = {
+        "task": Task,
+        "issue": Task,
+        "user": TrackUser,
+        "feature": Feature
+    }
+    target_table = request.args["target_table"].lower()
+    item_data = request.args.get("data", None)
+    my_table = table_class[target_table]()
+    item_id = my_table.save(item_data)
+    saved_data = my_table.get_detail(item_id)
+    return render_template(my_table.detail_page, item_detail = saved_data)
 
 def change_order():
     data = Cart.get_cart(current_user.id)
