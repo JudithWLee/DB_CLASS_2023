@@ -28,24 +28,22 @@ class Feature(General):
         self.detail_page = "featuredetail.html"
         self.generate_id = True
 
-    def list_features(self, featureId, keyword):
+    def list_items(self, featureId = '%', keyword = ''):
         title = self.attributes.copy()
         title.extend(["creatorName", "maintainerName"])
         sql = 'SELECT f.*, \
                       u_creator.userName creatorName, \
-                      u_maintainer.userName maintainerName, \
+                      u_maintainer.userName maintainerName \
                FROM FEATURE f \
                LEFT JOIN TRACKUSER u_creator ON f.creatorId = u_creator."userId" \
-               LEFT JOIN TRACKUSER u_maintainer ON t.maintainerId = u_maintainer."userId"'
-        sql += "WHERE (f.title LIKE '%:keyword%' \
-                OR f.description LIKE '%:keyword%') \
-                AND f.featureId LIKE '%:featureId%"
-        data = DB.fetchall(DB.execute_input(DB.prepare(sql),
-                                            {'keyword': keyword,
-                                             'featureId': featureId}))
+               LEFT JOIN TRACKUSER u_maintainer ON f.maintainerId = u_maintainer."userId"'
+        #sql += "WHERE (f.title LIKE '%{keyword}%' \
+        #        OR f.description LIKE '%{keyword}%') \
+        #        AND f.featureId LIKE '{featureId}'"
+        data = DB.fetchall(DB.execute(DB.connect(), sql))
         data_list = []
         for entry in data:
-            data_list.append(dict(zip(title, data[0])))
+            data_list.append(dict(zip(title, entry)))
         return data_list
 
 

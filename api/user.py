@@ -40,11 +40,10 @@ class TrackUser(General):
                ON u.supervisorId = u_supervisor."userId" \
                LEFT JOIN TRACKUSER u_adder \
                ON u.adderId = u_adder."userId"'
-        print(sql) # DEBUG
         data = DB.fetchall(DB.execute(DB.connect(), sql))
         data_list = []
         for entry in data:
-            data_list.append(dict(zip(title, data[0])))
+            data_list.append(dict(zip(title, entry)))
         return data_list
 
     def get_detail(self, userId):

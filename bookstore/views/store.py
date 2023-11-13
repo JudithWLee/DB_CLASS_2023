@@ -317,6 +317,7 @@ def list_table():
     target_data = my_table.list_items()
     if target_data is None:
         target_data = []
+    print(target_data) # DEBUG
     return render_template(my_table.list_page, item_list = target_data)
 
 def list_task(args: dict):
@@ -330,7 +331,6 @@ def list_task(args: dict):
 @login_required
 @store.route('/show_detail')
 def show_detail():
-    print("show detail called") # DEBUG
     table_class = {
         "task": Task,
         "issue": Task,

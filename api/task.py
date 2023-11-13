@@ -66,7 +66,7 @@ class Task(General):
         data = DB.fetchall(DB.execute(DB.connect(), sql))
         print(sql)
         for entry in data:
-            data_list.append(dict(zip(title, data[0])))
+            data_list.append(dict(zip(title, entry)))
         return data_list
 
     # TASKCOMMENT
