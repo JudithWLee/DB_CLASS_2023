@@ -7,192 +7,186 @@
 
 {% block content %}
 <!-- <form method="post" action="#"> -->
-  {% for i in issue_detail %}
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="staticBackdropLabel">Issue Detail</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form  method='post' action={{ url_for('bookstore.issuedetail.save') }} >
-                  <div class="mb-3">
-                    <div name="LV1_button">
-                      <form  method='post' action={{ url_for('bookstore.issuedetail.newIssue') }} >
-                        <button type="submit" class="btn btn-outline-success register_btn">New issue</button>
-                      </form>
-                      <form  method='post' action={{ url_for('bookstore.issuedetail.edit') }} >
-                        <button type="submit" class="btn btn-outline-primary register_btn">edit</button>
-                      </form>
-                      <form  method='post' action={{ url_for('bookstore.issuedetail.delete') }} >
-                        <button type="submit" class="btn btn-outline-danger register_btn">delete</button>
-                      </form>
-                    </div>
-                    <div name="LV2_button" style="display: none;">
-                        <button type="submit" class="btn btn-outline-primary register_btn">save</button>
-                      <form  method='post' action={{ url_for('bookstore.issuedetail.cancel') }} >
-                        <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
-                      </form>
-                    </div>
-                    <br />
-                    <div name="divShow">
-                      <table class="table table-bordered">
-                        <tr>
-                          <th><center>taskID</center></th>
-                          <th><center>Creator</center></th>
-                          <th><center>Owner</center></th>
-                          <th><center>dueDate</center></th>
-                        </tr>
-                        <tr>
-                          <td> <center>{{ i.taskId }}</center></td>
-                          <td> <center>{{ i.creatorName }}</center></td>
-                          <td> <center>{{ i.ownerName }}</center></td>
-                          <td> <center>{{ i.dueDate }}</center></td>
-                        </tr>
-                        <tr>
-                          <th><center>Assigner</center></th>
-                          <th><center>AssignTime</center></th>
-                          <th><center>Status</center></th>
-                          <th><center></center></th>
-                        </tr>
-                        <tr>
-                          <td> <center>{{ i.assignerName }}</center></td>
-                          <td> <center>{{ i.assigntime }}</center></td>
-                          <td> <center>{{ i.status }}</center></td>
-                          <td> <center></center></td>
-                        </tr>
-                      </table>
-                      <br />
-                      <table class="table table-bordered">
-                        <tr>
-                          <th><center>Title</center></th>
-                        </tr>
-                        <tr>
-                          <td> <center>{{ i.title }}</center></td>
-                        </tr>
-                        <tr>
-                          <th><center>Description</center></th>
-                        </tr>
-                        <tr>
-                          <td> <center>{{ i.description }}</center></td>
-                        </tr>
-                      </table>
-                    </div>
-                    <div name="divEdit" style="display: none;">
-                      <table class="table table-bordered">
-                        <tr>
-                          <th><center>taskID</center></th>
-                          <th><center>Creator</center></th>
-                          <th><center>Owner</center></th>
-                          <th><center>dueDate</center></th>
-                        </tr>
-                        <tr>
-                          <td> <center>{{i.taskId}}</center></td>
-                          <td> <center>{{ i.creatorName }}</center></td>
-                          <td> <center><input name="input_Owner_issuedetail_edit" type="search" class="form-control"></center></td>
-                          <td> <center><input name="input_dueDate_issuedetail_edit" type="search" class="form-control"></center></td>
-                        </tr>
-                        <tr>
-                          <th><center>Assigner</center></th>
-                          <th><center>AssignTime</center></th>
-                          <th><center>Status</center></th>
-                          <th><center></center></th>
-                        </tr>
-                        <tr>
-                          <td> <center>{{ i.assignerName }}</center></td>
-                          <td> <center>{{ i.assigntime }}</center></td>
-                          <td> <center>
-                            <select class="form-control" name="select_status_issuedetail_edit">                              
-                              <option value="open">open</option>
-                              <option value="inprogress">inprogress</option>
-                              <option value="review">review</option>
-                              <option value="close">close</option>
-                            </select>
-                          </center></td>
-                          <td> <center></center></td>
-                        </tr>
-                      </table>
-                      <br />
-                      <table class="table table-bordered">
-                        <tr>
-                          <th><center>Title</center></th>
-                        </tr>
-                        <tr>
-                          <td><center><input name="input_title_issuedetail_edit" type="search" class="form-control"></center></td>
-                        </tr>
-                        <tr>
-                          <th><center>Description</center></th>
-                        </tr>
-                        <tr>
-                          <td> <center><input name="input_discription_issuedetail_edit" type="search" class="form-control"></center></td>
-                        </tr>
-                      </table>
-                    </div>
-                  </div>
-                </form>
-                {% for j in comment_list %}
-                <div class="card" style="margin-top: 10px;">
-                  <div class="card-header">
-                    Comment &nbsp&nbsp Id:{{j.commentId}} &nbsp&nbsp&nbsp&nbsp
-                    <form  method='post' action={{ url_for('bookstore.issuedetail.deletecomment', id=j.commentId) }} >
-                      <button type="submit" class="btn btn-outline-primary register_btn">Delete</button>
-                    </form>
-                  </div>
-                   <div class="card-body">
-                    <div class="row">
-                      <div class="col-sm-2">
-                        Commenter:
-                      </div>
-                      <div class="col-sm-10">
-                        {{j.commenterName}}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-2">
-                        CommentTime:
-                      </div>
-                      <div class="col-sm-10">
-                        {{j.commentTime}}
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-2">
-                        Comment:&nbsp                        
-                      </div>
-                      <div class="col-sm-10">
-                        <textarea rows="4" cols="50">{{j.content}}</textarea>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {% endfor %}
-                <div class="card" style="margin-top: 10px;">
-                  <div class="card-header">
-                    Your Comment
-                  </div>
-                  <div class="card-body">
-                    <form  method='post' action={{ url_for('bookstore.issuedetail.Comment') }} >
-                      <div class="row">
-                        <div class="col-sm-12">
-                          <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-sm-12">
-                          <textarea id="content" name="content" rows="4" cols="50"></textarea>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" style="width:30%;">back to issue list</button>
-              </div>
+  <br/>
+  <div class="container-xl">
+    {% for i in issue_detail %}
+    <form  method='post' action={{ url_for('bookstore.issuedetail.save') }} >
+      <div class="row">
+        <div class="col-sm-12">
+          <div name="LV1_button">
+            <form  method='post' action={{ url_for('bookstore.issuedetail.newIssue') }} >
+              <button type="submit" class="btn btn-outline-success register_btn">New issue</button>
+            </form>
+            <form  method='post' action={{ url_for('bookstore.issuedetail.edit') }} >
+              <button type="submit" class="btn btn-outline-primary register_btn">edit</button>
+            </form>
+            <form  method='post' action={{ url_for('bookstore.issuedetail.delete') }} >
+              <button type="submit" class="btn btn-outline-danger register_btn">delete</button>
+            </form>
           </div>
+          <div name="LV2_button" style="display: none;">
+              <button type="submit" class="btn btn-outline-primary register_btn">save</button>
+            <form  method='post' action={{ url_for('bookstore.issuedetail.cancel') }} >
+              <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
+            </form>
+          </div>
+        </div>
+      </div> 
+      <br />
+      <div class="row">
+        <div class="col-sm-12">
+          <div name="divShow">
+            <table class="table table-bordered">
+              <tr>
+                <th><center>taskID</center></th>
+                <th><center>Creator</center></th>
+                <th><center>Owner</center></th>
+                <th><center>dueDate</center></th>
+              </tr>
+              <tr>
+                <td> <center>{{ i.taskId }}</center></td>
+                <td> <center>{{ i.creatorName }}</center></td>
+                <td> <center>{{ i.ownerName }}</center></td>
+                <td> <center>{{ i.dueDate }}</center></td>
+              </tr>
+              <tr>
+                <th><center>Assigner</center></th>
+                <th><center>AssignTime</center></th>
+                <th><center>Status</center></th>
+                <th><center></center></th>
+              </tr>
+              <tr>
+                <td> <center>{{ i.assignerName }}</center></td>
+                <td> <center>{{ i.assigntime }}</center></td>
+                <td> <center>{{ i.status }}</center></td>
+                <td> <center></center></td>
+              </tr>
+            </table>
+            <br />
+            <table class="table table-bordered">
+              <tr>
+                <th><center>Title</center></th>
+              </tr>
+              <tr>
+                <td> <center>{{ i.title }}</center></td>
+              </tr>
+              <tr>
+                <th><center>Description</center></th>
+              </tr>
+              <tr>
+                <td> <center>{{ i.description }}</center></td>
+              </tr>
+            </table>
+          </div>
+          <div name="divEdit" style="display: none;">
+            <table class="table table-bordered">
+              <tr>
+                <th><center>taskID</center></th>
+                <th><center>Creator</center></th>
+                <th><center>Owner</center></th>
+                <th><center>dueDate</center></th>
+              </tr>
+              <tr>
+                <td> <center>{{i.taskId}}</center></td>
+                <td> <center>{{ i.creatorName }}</center></td>
+                <td> <center><input name="input_Owner_issuedetail_edit" type="search" class="form-control"></center></td>
+                <td> <center><input name="input_dueDate_issuedetail_edit" type="search" class="form-control"></center></td>
+              </tr>
+              <tr>
+                <th><center>Assigner</center></th>
+                <th><center>AssignTime</center></th>
+                <th><center>Status</center></th>
+                <th><center></center></th>
+              </tr>
+              <tr>
+                <td> <center>{{ i.assignerName }}</center></td>
+                <td> <center>{{ i.assigntime }}</center></td>
+                <td> <center>
+                  <select class="form-control" name="select_status_issuedetail_edit">                              
+                    <option value="open">open</option>
+                    <option value="inprogress">inprogress</option>
+                    <option value="review">review</option>
+                    <option value="close">close</option>
+                  </select>
+                </center></td>
+                <td> <center></center></td>
+              </tr>
+            </table>
+            <br />
+            <table class="table table-bordered">
+              <tr>
+                <th><center>Title</center></th>
+              </tr>
+              <tr>
+                <td><center><input name="input_title_issuedetail_edit" type="search" class="form-control"></center></td>
+              </tr>
+              <tr>
+                <th><center>Description</center></th>
+              </tr>
+              <tr>
+                <td> <center><input name="input_discription_issuedetail_edit" type="search" class="form-control"></center></td>
+              </tr>
+            </table>
+          </div>    
+        </div>
       </div>
+    </form>
+    {% endfor %}
+    {% for j in comment_list %}
+    <div class="card" style="margin-top: 10px;">
+      <div class="card-header">
+        Comment &nbsp&nbsp Id:{{j.commentId}} &nbsp&nbsp&nbsp&nbsp
+        <form  method='post' action={{ url_for('bookstore.issuedetail.deletecomment', id=j.commentId) }} >
+          <button type="submit" class="btn btn-outline-primary register_btn">Delete</button>
+        </form>
+      </div>
+       <div class="card-body">
+        <div class="row">
+          <div class="col-sm-2">
+            Commenter:
+          </div>
+          <div class="col-sm-10">
+            {{j.commenterName}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2">
+            CommentTime:
+          </div>
+          <div class="col-sm-10">
+            {{j.commentTime}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2">
+            Comment:&nbsp                        
+          </div>
+          <div class="col-sm-10">
+            <textarea rows="4" cols="50">{{j.content}}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    <div class="card" style="margin-top: 10px;">
+      <div class="card-header">
+        Your Comment
+      </div>
+      <div class="card-body">
+        <form  method='post' action={{ url_for('bookstore.issuedetail.Comment') }} >
+          <div class="row">
+            <div class="col-sm-12">
+              <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <textarea id="content" name="content" rows="4" cols="50"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-  {% endfor %}
 {% endblock content %}
 
