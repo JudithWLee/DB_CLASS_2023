@@ -135,7 +135,7 @@
                 <div class="card" style="margin-top: 10px;">
                   <div class="card-header">
                     Comment &nbsp&nbsp Id:{{j.commentId}} &nbsp&nbsp&nbsp&nbsp
-                    <form  method='post' action={{ url_for('bookstore.issuedetail.deletecomment', id={{j.commentId}}) }} >
+                    <form  method='post' action={{ url_for('bookstore.issuedetail.deletecomment', id=j.commentId) }} >
                       <button type="submit" class="btn btn-outline-primary register_btn">Delete</button>
                     </form>
                   </div>
