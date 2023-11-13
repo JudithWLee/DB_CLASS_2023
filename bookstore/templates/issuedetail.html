@@ -10,7 +10,7 @@
   <br/>
   <div class="container-xl">
     {% for i in issue_detail %}
-    <form  method='post' action={{ url_for('bookstore.issuedetail.save') }} >
+    <form  method='post' action={{ url_for('bookstore.save', target_table='task') }} >
       <div class="row">
         <div class="col-sm-12">
           <div name="LV1_button">
@@ -173,7 +173,7 @@
         Your Comment
       </div>
       <div class="card-body">
-        <form  method='post' action={{ url_for('bookstore.issuedetail.Comment') }} >
+        <form  method='post' action={{ url_for('bookstore.show_detail', target_table='Comment') }} >
           <div class="row">
             <div class="col-sm-12">
               <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>

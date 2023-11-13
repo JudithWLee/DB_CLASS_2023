@@ -45,18 +45,18 @@
         <th><center>userName</center></th>
         <th><center>supervisor</center></th>
       </tr>
-      {% for i in user_list %}
+      {% for i in item_list %}
       <tr>
         <td width="20%">
           <center>
-            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.render_user', id=i.userId) }}">
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.show_detail', target_table='user',id=i.userId) }}">
               View Detail
             </button>
           </center>
         </td>
         <td> <center>{{ i.userId }}</center></td>
         <td> <center>{{ i.userName }}</center></td>
-        <td> <center>{{ i.supervisor }}</center></td>
+        <td> <center>{{ i.supervisorName }}</center></td>
       </tr>
       {% endfor %}
     </table>
