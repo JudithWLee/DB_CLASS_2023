@@ -19,107 +19,98 @@
 {% endif %}
 {% endwith %}
 
+<br/>
+<div class="container-xl">
 <!-- <form method="post" action="#"> -->
-  {% for i in user_detail %}
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="staticBackdropLabel">Task Detail</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form  method='post' action={{ url_for('bookstore.userdetail.save') }} >
-                  <input type="hidden" value="{{i.userId}}" name="input_userId_userdetail_edit">
-                  <div class="mb-3">
-                    <div name="LV1_button">
-                      <form  method='post' action={{ url_for('bookstore.userdetail.newUser') }} >
-                        <button type="submit" class="btn btn-outline-success register_btn">New User</button>
-                      </form>
-                      <form  method='post' action={{ url_for('bookstore.userdetail.edit') }} >
-                        <button type="submit" class="btn btn-outline-primary register_btn">edit</button>
-                      </form>
-                      <form  method='post' action={{ url_for('bookstore.userdetail.delete') }} >
-                        <button type="submit" class="btn btn-outline-danger register_btn">delete</button>
-                      </form>
-                    </div>
-                    <div name="LV2_button" style="display: none;">
-                        <button type="submit" class="btn btn-outline-primary register_btn">save</button>
-                      <form  method='post' action={{ url_for('bookstore.userdetail.cancel') }} >
-                        <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
-                      </form>
-                    </div>
-                    <br />
-                    <div name="divShow">
-                      <table class="table table-bordered">
-                        <tr>
-                          <th><center>userID</center></th>
-                          <th><center>supervisor</center></th>
-                          <th><center>adder</center></th>                          
-                        </tr>
-                        <tr>
-                          <td> <center>{{ i.userId }}</center></td>
-                          <td> <center>{{ i.supervisor }}</center></td>
-                          <td> <center>{{ i.adder }}</center></td>
-                        </tr>
-                      </table>
-                      <br />
-                      <table class="table table-bordered">
-                        <tr>
-                          <th><center>UserName</center></th>
-                        </tr>
-                        <tr>
-                          <td> <center>{{ i.userName }}</center></td>
-                        </tr>
-                      </table>
-                      <br />
-                    </div>
-                    <div name="divEdit" style="display: none;">
-                      <table class="table table-bordered">
-                        <tr>
-                          <th><center>userID</center></th>
-                          <th><center>supervisor</center></th>
-                          <th><center>adder</center></th>
-                        </tr>
-                        <tr>
-                          <td> <center></center></td>
-                          <td> <center><input name="input_supervisor_userdetail_edit" type="search" class="form-control"></center></td>
-                          <td> <center></center></td>
-                        </tr>
-                      </table>
-                      <br />
-                      <table class="table table-bordered">
-                        <tr>
-                          <th><center>userName</center></th>
-                        </tr>
-                        <tr>
-                          <td><center><input name="input_userName_userdetail_edit" type="search" class="form-control"></center></td>
-                        </tr>
-                        <tr>
-                          <th><center>password</center></th>
-                        </tr>
-                        <tr>
-                          <td> <center><input name="input_password1_userdetail_edit" type="password" class="form-control"></center></td>
-                        </tr>
-                        <tr>
-                          <th><center>double check</center></th>
-                        </tr>
-                        <tr>
-                          <td> <center><input name="input_password2_userdetail_edit" type="password" class="form-control"></center></td>
-                        </tr>
-                      </table>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <form  method='post' action={{ url_for('bookstore.userdetail.BackToList') }} >
-                  <button type="submit" class="btn btn-outline-success" data-bs-dismiss="modal" style="width:30%;">back to user list</button>
-                </form>
-              </div>
-          </div>
+  <form  method='post' action={{ url_for('bookstore.save', target_table='user') }} >
+    <div class="row">
+      <div class="col-sm-12">
+        <div name="LV1_button">
+          <form  method='post' action={{ url_for('bookstore.empty_form', target_table='user') }} >
+            <button type="submit" class="btn btn-outline-success register_btn">New User</button>
+          </form>
+          <form  method='post' action={{ url_for('bookstore.edit', target_data='user') }} >
+            <button type="submit" class="btn btn-outline-primary register_btn">edit</button>
+          </form>
+          <form  method='post' action={{ url_for('bookstore.delete', target_data='user') }} >
+            <button type="submit" class="btn btn-outline-danger register_btn">delete</button>
+          </form>
+        </div>
+        <div name="LV2_button" style="display: none;">
+            <button type="submit" class="btn btn-outline-primary register_btn">save</button>
+          <form  method='post' action={{ url_for('bookstore.show_detail', target_data='user', id=item_detail.user_id) }} >
+            <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
+          </form>
+        </div>
       </div>
-  </div>
-  {% endfor %}
+      <br />
+      <div class="row">
+        <div class="col-sm-12">
+          <div name="divShow">
+            <table class="table table-bordered">
+              <tr>
+                <th><center>userID</center></th>
+                <th><center>supervisor</center></th>
+                <th><center>adder</center></th>                          
+              </tr>
+              <tr>
+                <td> <center>{{ item_detail.userId }}</center></td>
+                <td> <center>{{ item_detail.supervisor }}</center></td>
+                <td> <center>{{ item_detail.adder }}</center></td>
+              </tr>
+            </table>
+            <br />
+            <table class="table table-bordered">
+              <tr>
+                <th><center>UserName</center></th>
+              </tr>
+              <tr>
+                <td> <center>{{ item_detail.userName }}</center></td>
+              </tr>
+            </table>
+            <br />
+          </div>
+          <div name="divEdit" style="display: none;">
+            <table class="table table-bordered">
+              <tr>
+                <th><center>userID</center></th>
+                <th><center>supervisor</center></th>
+                <th><center>adder</center></th>
+              </tr>
+              <tr>
+                <td> <center></center></td>
+                <td> <center><input name="input_supervisor_userdetail_edit" type="search" class="form-control"></center></td>
+                <td> <center></center></td>
+              </tr>
+            </table>
+            <br />
+            <table class="table table-bordered">
+              <tr>
+                <th><center>userName</center></th>
+              </tr>
+              <tr>
+                <td><center><input name="input_userName_userdetail_edit" type="search" class="form-control"></center></td>
+              </tr>
+              <tr>
+                <th><center>password</center></th>
+              </tr>
+              <tr>
+                <td> <center><input name="input_password1_userdetail_edit" type="password" class="form-control"></center></td>
+              </tr>
+              <tr>
+                <th><center>double check</center></th>
+              </tr>
+              <tr>
+                <td> <center><input name="input_password2_userdetail_edit" type="password" class="form-control"></center></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+
 {% endblock content %}
 
