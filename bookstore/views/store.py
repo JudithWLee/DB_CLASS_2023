@@ -32,7 +32,8 @@ def search_filter():
                                issue_list = current_issue_list)    
 
 @login_required
-def render_issue():
+@store.route('/viewissue')
+def viewissue():
     """Shows issue details per provided id; otherwise show issue list per filter.
 
     issue = task. My bad.
@@ -360,58 +361,55 @@ def orderlist():
 def viewuser():
     pass
 
-@store.route('/viewissue')
-def viewissue():
-    """Shows all issues to the user.
+@store.route('/list_table')
+def list_table():
+    # we use another function for task as it requires filter
+    table_class = {
+        "task": list_task,
+        "issue": list_task,
+        "user": TrackUser,
+        "feature": Feature
+    }
+    # to make it case insensitive just in case
+    target_table = request.args["target_table"].lower()
+    if callable(table_class[target_table]):
+        return table_class[target_table](request.args)
 
-    This function is triggered via the 'View Issues',
-    and renders template viewissue.html.
+    my_table = table_class[target_table]()
+    target_data = my_table.get_detail()
+    return render_template(my_table.list_page, data = target_data)
 
-    Returns:
-        return value of render_template
-    """
-    if "oid" in request.args:
-        print(f"oid: {oid}") # DEBUG
-        pass
-    
-    user_id = current_user.id
+def list_task(args: dict):
+    # TODO finish filter implementation
+    my_filter = args.get("filter", None)
+    my_filter = Filter()
+    my_table = Task()
+    data = my_table.list_item(my_filter)
+    return render_template(my_table.list_page, data = data)
 
-    data = Member.get_order(user_id)
-    viewissue = []
+@store.route('/show_detail')
+def show_detail():
+    table_class = {
+        "task": Task,
+        "issue": Task,
+        "user": TrackUser,
+        "feature": Feature
+    }
+    target_table = request.args["target_table"].lower()
+    item_id = request.args["id"]
+    my_table = table_class[target_table](item_id)
+    target_data = my_table.get_detail(item_id)
+    return render_template(my_table.detail_page, data = target_data)
 
-    for i in data:
-        temp = {
-            '訂單編號': i[0],
-            '訂單總價': i[3],
-            '訂單時間': i[2]
-        }
-        viewissue.append(temp)
-    
-    orderdetail_row = Order_List.get_issue()
-    orderdetail = []
-
-    for j in orderdetail_row:
-        temp = {
-            '訂單編號': j[0],
-            '商品名稱': j[1],
-            '商品單價': j[2],
-            '訂購數量': j[3]
-        }
-        orderdetail.append(temp)
-
-
-    return render_template('viewissue.html', data=viewissue,
-                           detail=orderdetail, user=current_user.name)
-
-def show_issue_detail():
-    """Shows issue detail.
-
-    Triggered by clicking on task id.
-
-    Returns:
-        return value of render_template
-    """
-    return render_template('issuedetail.html', taskid = taskid)
+@store.route('/create')
+def create():
+    table_class = {
+        "task": Task,
+        "issue": Task,
+        "user": TrackUser,
+        "feature": Feature
+    }
+    target_table = request.args["target_table"].lower()
 
 def change_order():
     data = Cart.get_cart(current_user.id)

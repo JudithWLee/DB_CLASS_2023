@@ -1,6 +1,7 @@
 from link import *
 from api.General import General
 from api.sql import DB
+from api.task import Task
 class Feature(General):
     """Similar to task, but describes the features required.
 
@@ -17,14 +18,19 @@ class Feature(General):
       title: feature title
       description: feature description
     """
-    def __init__(self, item_id):
+    def __init__(self, item_id: None):
         self.featureId = item_id
         self.table_name = "FEATURE"
         self.attributes = ["featureId", "creatorId", "maintainerId", "title",
                            "description"]
         self.primary = "featureId"
+        self.list_page = "viewfeature.html"
+        self.detail_page = "featuredetail.html"
+        self.generate_id = True
 
     def list_features(self, featureId, keyword):
+        title = self.attributes.copy()
+        title.extend(["creatorName", "maintainerName"])
         sql = 'SELECT f.*, \
                       u_creator.userName creatorName, \
                       u_maintainer.userName maintainerName, \
@@ -34,12 +40,15 @@ class Feature(General):
         sql += "WHERE (f.title LIKE '%:keyword%' \
                 OR f.description LIKE '%:keyword%') \
                 AND f.featureId LIKE '%:featureId%"
-        return DB.fetchall(DB.execute_input(DB.prepare(sql),
+        data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'keyword': keyword,
                                              'featureId': featureId}))
+        return dict(zip(title, data))
 
 
     def get_details(self):
+        title = self.attributes.copy()
+        title.extend(["creatorName", "maintainerName"])
         sql = 'SELECT f.*, \
                       u_creator.userName creatorName, \
                       u_maintainer.userName maintainerName, \
@@ -47,8 +56,9 @@ class Feature(General):
                LEFT JOIN TRACKUSER u_creator ON f.creatorId = u_creator."userId" \
                LEFT JOIN TRACKUSER u_maintainer ON t.maintainerId = u_maintainer."userId" \
                WHERE f.featuerId = :featureId'
-        return DB.fetchall(DB.execute_input(DB.prepare(sql),
+        data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'featureId': self.featureId}))
+        return dict(zip(title, data))
 
     def list_tasks(self):
         """Get details of feature.
@@ -56,11 +66,14 @@ class Feature(General):
         Returns:
         - all details of tasks belonging to this feature
         """
-        sql = "SELECT t.*, \
+        title = Task().attributes.copy()
+        title.append('ownerName')
+        sql = "SELECT t.*, u_owner.userName ownerName \
                FROM FEATURE f, \
                LEFT JOIN FEATURETASKRELATION r ON f.featureId = r.featureId \
-               LEFT JOIN TASK t ON r.taskId = t.taskId \
-               WHERE f.featureId = :featureId"
-        return DB.fetchall(DB.execute_input(DB.prepare(sql),
+               LEFT JOIN TASK t ON r.taskId = t.taskId "
+        sql+=  'LEFT JOIN TRACKUSER u_owner ON t.taskOwner = u_owner."userId" \
+               WHERE f.featureId = :featureId'
+        data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'featureid': self.featureId}))
-
+        return dict(zip(title, data))

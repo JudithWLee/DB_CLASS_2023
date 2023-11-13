@@ -47,7 +47,8 @@ def login():
             login_user(user)
 
             # TODO change url to rendering list issue
-            return redirect(url_for('bookstore.bookstore'))
+            return redirect(url_for('bookstore.list_table',
+                                    target_table = 'task'))
         
         else:
             flash('*Password or account incorrect')

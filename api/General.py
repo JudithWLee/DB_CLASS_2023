@@ -4,11 +4,12 @@ class General():
     """Parent class for TrackUser, Task, Comment, and Feature.
 
     DO NOT call this directly."""
-    def __init__(self, item_id):
+    def __init__(self, item_id: None):
         self.item_id = item_id
         self.table_name = "GENERAL"
         self.attributes = []
         self.primary = "key"
+        self.generate_id = False
 
     def list_items(self):
         """List items per filter.
@@ -31,8 +32,21 @@ class General():
         ("userId",USERNAME,PASSWORD,SUPERVISORID,ADDERID)
         VALUES ('V00001','黃品堯','12345','','V00001')
         """
-        sql = f'INSERT INTO GROUP5.{self.table_name} ('
+        # generate id if needed
+        if self.generate_id:
+            sql=f'SELECT {self.primary} \
+                 FROM {self.table_name} \
+                 WHERE {self.primary} = ( \
+                     SELECT MAX(TO_NUMBER({self.primary}) DEFAULT NULL ON CONVERSION ERROR) \
+                     FROM {self.table_name} \
+                 )'
+            data = DB.fetchall(DB.execute(DB.connect(), sql))
+            if not data:
+                item_data[self.primary] = 0
+            else:
+                item_data[self.primary] = data[0][0] + 1
 
+        sql = f'INSERT INTO GROUP5.{self.table_name} ('
         for attr in self.attributes[:-1]:
             # put None in absent attributes
             item_data[attr] = item_data.get(attr, None)

@@ -5,7 +5,7 @@ class Filter():
         self.user = '%'
         self.status = '%'
         self.keyword = ''
-        self.order_by = 'due date'
+        self.order_by = 'duedate'
         self.order = 'DESC'
         self.featureId = None
 

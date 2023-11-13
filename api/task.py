@@ -17,14 +17,17 @@ class Task(General):
       creator: the person created the task
       assigntime: when the task was assigned
     """
-    def __init__(self, item_id):
-        self.taskId = taskId
+    def __init__(self, item_id = None):
+        self.taskId = item_id
         self.table_name = "Task"
         self.attributes = ["taskId","status","description","taskOwner","title",
                            "dueDate","assigner","creator","assigntime"]
         self.primary = "taskId"
+        self.list_page = "viewissue.html"
+        self.detail_page = "issuedetail.html"
+        self.generate_id = True
 
-    def list_item(user_filter: Filter):
+    def list_item(self, user_filter: Filter):
         """Lists all tasks.
 
         By default, list all tasks available in order of task id;
@@ -44,22 +47,24 @@ class Task(General):
         Returns:
             filtered tasks
         """
-        sql = "SELECT * FROM TASK \
-               WHERE TASKOWNER LIKE :id \
-               AND STATUS LIKE :status \
-               AND TITLE LIKE '%:keyword%' \
-               ORDER BY :order_by :order"
-        return DB.fetchall(DB.execute_input(DB.prepare(sql),
-                                            {'id': user_filter.user,
-                                             'status': user_filter.status,
-                                             'keyword': user_filter.keyword,
-                                             'order_by': user_filter.order_by,
-                                             'order': user_filter.order}))
+        title = self.attributes.copy()
+        title.append('ownerName')
+        sql = "SELECT t.*, u_owner.userName ownerName "
+        sql += 'FROM TASK t '
+        sql += 'LEFT JOIN TRACKUSER u_owner ON t.taskowner = u_owner."userId" '
+        sql += f"WHERE u_owner.userName LIKE '{user_filter.user}' \
+                AND t.STATUS LIKE '{user_filter.status}' \
+                AND t.TITLE LIKE '%{user_filter.keyword}%' \
+                ORDER BY {user_filter.order_by} {user_filter.order}"
+        print(sql)
+        data = DB.fetchall(DB.execute(DB.connect(), sql))
+        print(data) # DEBUG
+        return dict(zip(title, data))
 
     # TASKCOMMENT
     # TASK
     # TRACKUSER
-    def get_detail(taskid):
+    def get_detail(self, taskid):
         """Show task detail based on taskid.
 
         Args:
@@ -68,6 +73,8 @@ class Task(General):
         Returns:
             task details
         """
+        title = self.attributes.copy()
+        title.extend(['ownerName', 'assignerName','creatorName'])
         sql = 'SELECT t.taskId, t.status, t.description, t.taskOwner, t.title, \
                       TO_CHAR(t.dueDate, "YYYY/MM/DD") dueDate, \
                       t.assigner, t.creator, t.assigntime, \
@@ -80,6 +87,7 @@ class Task(General):
                LEFT JOIN TRACKUSER u_creator ON t.creator = u_creator."userId" \
                LEFT JOIN TASKCOMMENT c ON t.taskId = c.taskId \
                WHERE t.taskId = :taskid'
-        return DB.fetchall(DB.execute_input(DB.prepare(sql),
+        data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'taskid': taskid}))
+        return dict(zip(title, data))
 

@@ -13,12 +13,12 @@
 
 <br/>
 <div class="container-xl">
-  <form method="post" action={{ url_for('bookstore.viewissue') }}>
-    <form  method='post' action={{ url_for('bookstore.viewissue.search') }} >
+  <form method="post" action={{ url_for('bookstore.list_table', target_table="task") }}>
+    <form  method='post' action={{ url_for('bookstore.list_table', target_table="task") }} >
       <div class="row">
         <div class="col-sm-12">
           <button type="submit" class="btn btn-outline-primary register_btn">search</button>
-          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.new_issue') }}">New issue</button>
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.create', target_table = "task") }}">New issue</button>
         </div>
       </div>
       <div class="row">
@@ -56,7 +56,7 @@
       <tr>
         <td width="20%">
           <center>
-            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.render_issue', id={{i.taskId}}) }}">
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.show_detail', target_table="task", id=i.taskId) }}">
               View Detail
             </button>
           </center>
