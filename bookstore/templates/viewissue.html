@@ -18,9 +18,12 @@
       <div class="row">
         <div class="col-sm-12">
           <button type="submit" class="btn btn-outline-primary register_btn">search</button>
-          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.empty_form', target_table = "task") }}">New issue</button>
+          <a href="{{ url_for('bookstore.empty_form', target_table='task') }}" class="btn btn-outline-success">
+            New issue
+          </a>
         </div>
       </div>
+      <br />
       <div class="row">
         <div class="col-sm-1" style="text-align: right;">TaskOwner:</div>
         <div class="col-sm-3">

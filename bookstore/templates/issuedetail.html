@@ -9,7 +9,7 @@
 <!-- <form method="post" action="#"> -->
   <br/>
   <div class="container-xl">
-    {% for i in issue_detail %}
+
     <form  method='post' action={{ url_for('bookstore.save', target_table='task') }} >
       <div class="row">
         <div class="col-sm-12">
@@ -34,6 +34,7 @@
       </div> 
       <br />
       <div class="row">
+        {% for i in issue_detail %}
         <div class="col-sm-12">
           <div name="divShow">
             <table class="table table-bordered">
@@ -129,9 +130,9 @@
             </table>
           </div>    
         </div>
+        {% endfor %}
       </div>
     </form>
-    {% endfor %}
     {% for j in comment_list %}
     <div class="card" style="margin-top: 10px;">
       <div class="card-header">
@@ -179,6 +180,7 @@
               <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>
             </div>
           </div>
+          <br />
           <div class="row">
             <div class="col-sm-12">
               <textarea id="content" name="content" rows="4" cols="50"></textarea>
