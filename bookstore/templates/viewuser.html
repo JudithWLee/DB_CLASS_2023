@@ -49,9 +49,9 @@
       <tr>
         <td width="20%">
           <center>
-            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.show_detail', target_table='user',id=i.userId) }}">
+	    <a href="{{ url_for('bookstore.show_detail', target_table='user', id=i.userId) }}" class="btn btn-outline-success">
               View Detail
-            </button>
+	    </a>
           </center>
         </td>
         <td> <center>{{ i.userId }}</center></td>

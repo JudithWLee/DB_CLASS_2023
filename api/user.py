@@ -56,7 +56,7 @@ class TrackUser(General):
                LEFT JOIN TRACKUSER u_supervisor \
                ON u.supervisorId = u_supervisor."userId" \
                LEFT JOIN TRACKUSER u_adder \
-               ON u."adderId" = u_adder."userId" \
+               ON u.adderId = u_adder."userId" \
                WHERE u."userId" = :userId'
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'userId': userId}))

@@ -317,7 +317,6 @@ def list_table():
     target_data = my_table.list_items()
     if target_data is None:
         target_data = []
-    print(target_data) # DEBUG
     return render_template(my_table.list_page, item_list = target_data)
 
 def list_task(args: dict):
@@ -331,6 +330,7 @@ def list_task(args: dict):
 @login_required
 @store.route('/show_detail')
 def show_detail():
+    print("in show detail") # DEBUG
     table_class = {
         "task": Task,
         "issue": Task,
@@ -341,8 +341,6 @@ def show_detail():
     item_id = request.args["id"]
     my_table = table_class[target_table](item_id)
     target_data = my_table.get_detail(item_id)
-    print(target_data) # DEBUG
-    print(my_table.detail_page) # DEBUG
     return render_template(my_table.detail_page, item_detail = target_data)
 
 @login_required
@@ -384,6 +382,11 @@ def save():
     item_id = my_table.save(item_data)
     saved_data = my_table.get_detail(item_id)
     return render_template(my_table.detail_page, item_detail = saved_data)
+
+# TODO finish
+@store.route('/new_feature_task')
+def new_feature_task():
+    pass
 
 def change_order():
     data = Cart.get_cart(current_user.id)

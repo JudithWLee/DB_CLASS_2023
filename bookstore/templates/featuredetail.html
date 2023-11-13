@@ -50,25 +50,15 @@
             </table>
             <br />
             <table class="table table-bordered">
-              <tr>
-                <th><center>Title</center></th>
-              </tr>
-              <tr>
-                <td> <center>{{ item_detail.title }}</center></td>
-              </tr>
-              <tr>
-                <th><center>Description</center></th>
-              </tr>
-              <tr>
-                <td> <center>{{ item_detail.description }}</center></td>
-              </tr>
+              <tr><th><center>Title</center></th><td><center>{{ item_detail.title }}</center></td></tr>
+              <tr><th><center>Description</center></th><td><center>{{ item_detail.description }}</center></td></tr>
             </table>
             <br />
             <div class="row">
-              <form  method='post' action={{ url_for('bookstore.featuredetail.addTask') }} >
+              <form  method='post' action={{ url_for('bookstore.new_feature_task', feature_id = item_detail.featureid) }} >
                 <div class="col-sm-1" style="text-align: right;">taskId:</div>
                 <div class="col-sm-3">
-                  <input name="featureId" type="hidden" value="{{i.featureId}}">
+                  <input name="featureId" type="hidden" value="{{item_detail.featureId}}">
                   <input name="input_taskId_featuredetail_show" type="search" class="form-control">
                 </div>
                 <div class="col-sm-1" style="text-align: left;">
@@ -116,18 +106,8 @@
             </table>
             <br />
             <table class="table table-bordered">
-              <tr>
-                <th><center>Title</center></th>
-              </tr>
-              <tr>
-                <td><center><input name="input_title_featuredetail_edit" type="search" class="form-control"></center></td>
-              </tr>
-              <tr>
-                <th><center>Description</center></th>
-              </tr>
-              <tr>
-                <td> <center><input name="input_discription_featuredetail_edit" type="search" class="form-control"></center></td>
-              </tr>
+              <tr><th><center>Title</center></th><td><center>{{ item_detail.title }}</center></td></tr>
+              <tr><th><center>Description</center></th><td><center>{{ item_detail.description }}</center></td></tr>
             </table>
           </div>
         </div>

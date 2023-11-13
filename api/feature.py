@@ -47,16 +47,16 @@ class Feature(General):
         return data_list
 
 
-    def get_details(self, featureId):
+    def get_detail(self, featureId):
         title = self.attributes.copy()
         title.extend(["creatorName", "maintainerName"])
         sql = 'SELECT f.*, \
                       u_creator.userName creatorName, \
-                      u_maintainer.userName maintainerName, \
+                      u_maintainer.userName maintainerName \
                FROM FEATURE f \
                LEFT JOIN TRACKUSER u_creator ON f.creatorId = u_creator."userId" \
-               LEFT JOIN TRACKUSER u_maintainer ON t.maintainerId = u_maintainer."userId" \
-               WHERE f.featuerId = :featureId'
+               LEFT JOIN TRACKUSER u_maintainer ON f.maintainerId = u_maintainer."userId" \
+               WHERE f.featureId = :featureId'
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'featureId': featureId}))
         return dict(zip(title, data[0]))
@@ -81,3 +81,6 @@ class Feature(General):
         for entry in data:
             data_list.append(dict(zip(title, data[0])))
         return data_list
+
+    def add_task(self):
+        pass
