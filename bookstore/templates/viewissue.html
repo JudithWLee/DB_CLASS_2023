@@ -24,7 +24,7 @@
       <div class="row">
         <div class="col-sm-1" style="text-align: right;">TaskOwner:</div>
         <div class="col-sm-3">
-          <select class="form-control" name="select_taskowner_viewissue_search" action={{ url_for('bookstore.search_filter', action=get_all_member, issue_list=issue_list) }}></select>        
+          <select class="form-select" name="select_taskowner_viewissue_search" action={{ url_for('bookstore.search_filter', action='get_all_member', issue_list='issue_list') }}></select>        
         </div>
         <div class="col-sm-1" style="text-align: right;">Status:</div>
         <div class="col-sm-3">
@@ -56,9 +56,9 @@
       <tr>
         <td width="20%">
           <center>
-            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.show_detail', target_table="task", id=i.taskId) }}">
-              View Detail
-            </button>
+		  <a href="{{ url_for('bookstore.show_detail', target_table='task', id=i.taskId) }}" class="btn btn-outline-success">
+			  View Detail
+		  </a>
           </center>
         </td>
         <td> <center>{{ i.taskId }}</center></td>

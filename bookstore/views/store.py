@@ -326,6 +326,7 @@ def list_task(args: dict):
 
 @store.route('/show_detail')
 def show_detail():
+    print("show detail called") # DEBUG
     table_class = {
         "task": Task,
         "issue": Task,
@@ -336,6 +337,8 @@ def show_detail():
     item_id = request.args["id"]
     my_table = table_class[target_table](item_id)
     target_data = my_table.get_detail(item_id)
+    print(target_data) # DEBUG
+    print(my_table.detail_page) # DEBUG
     return render_template(my_table.detail_page, item_detail = target_data)
 
 @store.route('/empty_form')

@@ -64,6 +64,7 @@ class Task(General):
                 AND t.TITLE LIKE '%{user_filter.keyword}%' \
                 ORDER BY {user_filter.order_by} {user_filter.order}"
         data = DB.fetchall(DB.execute(DB.connect(), sql))
+        print(sql)
         for entry in data:
             data_list.append(dict(zip(title, data[0])))
         return data_list
@@ -82,6 +83,7 @@ class Task(General):
         """
         title = self.attributes.copy()
         title.extend(['ownerName', 'assignerName','creatorName'])
+
         sql = 'SELECT t."taskId", t.status, t.description, t.taskOwner, t.title, '
         sql += "      TO_CHAR(t.dueDate, 'YYYY/MM/DD') dueDate, \
                       t.assigner, t.creator, TO_CHAR(t.assigntime, 'YYYY/MM/DD') assignTime, \
@@ -89,11 +91,12 @@ class Task(General):
                       u_assigner.userName assignerName, \
                       u_creator.userName creatorName \
                FROM TASK t "
-        sql += 'EFT JOIN TRACKUSER u_owner ON t.taskowner = u_owner."userId" \
+        sql += 'LEFT JOIN TRACKUSER u_owner ON t.taskowner = u_owner."userId" \
                LEFT JOIN TRACKUSER u_assigner ON t.assigner = u_assigner."userId" \
                LEFT JOIN TRACKUSER u_creator ON t.creator = u_creator."userId" \
-               LEFT JOIN TASKCOMMENT c ON t.taskId = c.taskId \
-               WHERE t.taskId = :taskid'
+               WHERE t."taskId" = :taskid'
+               # deleted: LEFT JOIN TASKCOMMENT c ON t."taskId" = c."taskId" \
+
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'taskid': taskid}))
         return dict(zip(title, data[0]))

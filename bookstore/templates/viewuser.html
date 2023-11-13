@@ -14,22 +14,22 @@
 <br/>
 <div class="container-xl">
   <form method="post" action={{ url_for('bookstore.list_table', target_table="user") }}>
-    <form  method='post' action={{ url_for('bookstore.list_table', target_table="user"') }} >
+    <form  method='post' action={{ url_for('bookstore.list_table', target_table="user") }} >
       <div class="row">
         <div class="col-sm-12">
           <button type="submit" class="btn btn-outline-primary register_btn">search</button>
-          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.empty_form', target_table="user") }}">New user</button>
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="{{ url_for('bookstore.empty_form', target_table = 'user') }}">New user</button>
 
         </div>
       </div>
       <div class="row">
         <div class="col-sm-1" style="text-align: right;">userId:</div>
         <div class="col-sm-3">
-          <input type="search" name="input_userId_viewuser_search" class="=form-control me-2" placeholder="type user id here">
+          <input type="search" name="input_userId_viewuser_search" class="form-control me-2" placeholder="type user id here">
         </div>      
         <div class="col-sm-1" style="text-align: right;">supervisorId:</div>
         <div class="col-sm-3">
-          <input type="search" name="input_supervisorId_viewuser_search" class="=form-control me-2" placeholder="type supervisor id here">
+          <input type="search" name="input_supervisorId_viewuser_search" class="form-control me-2" placeholder="type supervisor id here">
         </div>  
         <div class="col-sm-1" style="text-align: right;">userName:</div>
         <div class="col-sm-3">
