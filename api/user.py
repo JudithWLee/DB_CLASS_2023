@@ -47,8 +47,8 @@ class TrackUser(General):
         return data_list
 
     def get_detail(self, userId):
-        data_title = self.attributes.copy()
-        data_title.extend(['supervisorName', 'adderName'])
+        title = self.attributes.copy()
+        title.extend(['supervisorName', 'adderName'])
         sql = 'SELECT u.*, \
                       u_supervisor.userName supervisorName, \
                       u_adder.userName adderName \
@@ -60,6 +60,7 @@ class TrackUser(General):
                WHERE u."userId" = :userId'
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'userId': userId}))
+        print(data) # DEBUG
         return dict(zip(title, data[0]))
 
     def create(self, userId, item_data):
