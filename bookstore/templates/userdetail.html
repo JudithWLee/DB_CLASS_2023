@@ -26,21 +26,39 @@
     <div class="row">
       <div class="col-sm-12">
         <div name="LV1_button">
-          <form  method='post' action={{ url_for('bookstore.empty_form', target_table='user') }} >
-            <button type="submit" class="btn btn-outline-success register_btn">New User</button>
-          </form>
-          <form  method='post' action={{ url_for('bookstore.edit', target_data='user') }} >
-            <button type="submit" class="btn btn-outline-primary register_btn">edit</button>
-          </form>
-          <form  method='post' action={{ url_for('bookstore.delete', target_data='user') }} >
-            <button type="submit" class="btn btn-outline-danger register_btn">delete</button>
-          </form>
+          <table>
+            <tr>
+              <td>
+                <!-- <form  method='post' action={{ url_for('bookstore.empty_form', target_table='user') }} >
+                  <button type="submit" class="btn btn-outline-success register_btn">New User</button>
+                </form> -->
+              </td>
+              <td>
+                <form  method='post' action={{ url_for('bookstore.edit', target_data='user') }} >
+                  <button type="submit" class="btn btn-outline-primary register_btn">edit</button>
+                </form>
+              </td>
+              <td>
+                <form  method='post' action={{ url_for('bookstore.delete', target_data='user') }} >
+                  <button type="submit" class="btn btn-outline-danger register_btn">delete</button>
+                </form>
+              </td>
+            </tr>
+          </table>
         </div>
         <div name="LV2_button" style="display: none;">
-            <button type="submit" class="btn btn-outline-primary register_btn">save</button>
-          <form  method='post' action={{ url_for('tracker.show_detail', target_data='user', id=item_detail.user_id) }} >
-            <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
-          </form>
+          <table>
+            <tr>
+              <td>
+                <button type="submit" class="btn btn-outline-primary register_btn">save</button>
+              </td>
+              <td>
+                <form  method='post' action={{ url_for('tracker.show_detail', target_data='user', id=item_detail.user_id) }} >
+                  <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
+                </form>
+              </td>
+            </tr>
+          </table>
         </div>
       </div>
       <br />
