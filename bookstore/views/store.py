@@ -239,6 +239,14 @@ def cart():
     else:
         return render_template('cart.html', data=product_data, user=current_user.name)
 
+def list_task(args: dict):
+    # TODO finish filter implementation
+    my_filter = args.get("filter", None)
+    my_filter = Filter()
+    my_table = Task()
+    data = my_table.list_item(my_filter)
+    return render_template(my_table.list_page, item_list = data)
+
 @store.route('/order')
 def order():
     data = Cart.get_cart(current_user.id)
@@ -294,58 +302,6 @@ def orderlist():
 
     return render_template('orderlist.html', data=orderlist, detail=orderdetail, user=current_user.name)
 
-@store.route('/viewuser')
-def viewuser():
-    pass
-
-@login_required
-@store.route('/list_table')
-def list_table():
-    # we use another function for task as it requires filter
-    table_class = {
-        "task": list_task,
-        "issue": list_task,
-        "user": TrackUser,
-        "feature": Feature
-    }
-    # to make it case insensitive just in case
-    target_table = request.args["target_table"].lower()
-    if not inspect.isclass(table_class[target_table]):
-        return table_class[target_table](request.args)
-
-    my_table = table_class[target_table]()
-    target_data = my_table.list_items()
-    if target_data is None:
-        target_data = []
-    return render_template(my_table.list_page, item_list = target_data)
-
-def list_task(args: dict):
-    # TODO finish filter implementation
-    my_filter = args.get("filter", None)
-    my_filter = Filter()
-    my_table = Task()
-    data = my_table.list_item(my_filter)
-    return render_template(my_table.list_page, item_list = data)
-
-@login_required
-@store.route('/show_detail')
-def show_detail():
-    print("in show detail") # DEBUG
-    table_class = {
-        "task": Task,
-        "issue": Task,
-        "user": TrackUser,
-        "feature": Feature
-    }
-    target_table = request.args["target_table"].lower()
-    item_id = request.args["id"]
-    my_table = table_class[target_table](item_id)
-    target_data = my_table.get_detail(item_id)
-    comments = Comment(item_id)
-    comment_list = comments.list_items()
-    return render_template(my_table.detail_page, item_detail = target_data,
-                           comment_list = comment_list)
-
 @login_required
 @store.route('/empty_form')
 def empty_form():
@@ -363,14 +319,12 @@ def empty_form():
 # TODO finish
 @store.route('/delete')
 def delete():
-    table_class = {
-        "task": Task,
-        "issue": Task,
-        "user": TrackUser,
-        "feature": Feature,
-        "comment": Comment
-    }
     pass
+    #item_id = request.args["id"]
+    #task_id = request.args["task_id"]
+    #my_table = table_class[target_table]()
+    #my_table.delete(item_id)
+    #return show_detail()
 
 # TODO finish
 @store.route('/edit')

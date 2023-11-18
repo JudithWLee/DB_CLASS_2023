@@ -26,7 +26,7 @@
           </div>
           <div name="LV2_button" style="display: none;">
               <button type="submit" class="btn btn-outline-primary register_btn">save</button>
-            <form  method='post' action={{ url_for('bookstore.show_detail', target_data='task', id=item_detail.task_id) }} >
+            <form  method='post' action={{ url_for('tracker.show_detail', target_data='task', id=item_detail.task_id) }} >
               <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
             </form>
           </div>
@@ -125,7 +125,7 @@
     <div class="card" style="margin-top: 10px;">
       <div class="card-header">
         Comment &nbsp&nbsp Id:{{j.commentId}} &nbsp&nbsp&nbsp&nbsp
-        <form  method='post' action={{ url_for('bookstore.delete', target_table="comment", id=j.commentId) }} >
+        <form  method='post' action={{ url_for('tracker.delete_comment', target_table = "comment", id=j.commentId, task_id = item_detail.taskId) }} >
           <button type="submit" class="btn btn-outline-primary register_btn">Delete</button>
         </form>
       </div>
@@ -162,7 +162,7 @@
         Your Comment
       </div>
       <div class="card-body">
-        <form  method='post' action={{ url_for('bookstore.list_table', target_table='Comment') }} >
+        <form  method='post' action={{ url_for('tracker.list_table', target_table='Comment') }} >
           <div class="row">
             <div class="col-sm-12">
               <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>

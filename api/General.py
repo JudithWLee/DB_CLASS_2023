@@ -106,7 +106,7 @@ class General():
         # TODO create new id if is none
         # check if item exists using primary key
         sql = 'SELECT COUNT(*) FROM GROUP5.{self.table_name}'
-        sql += f' WHERE "{self.primary}" = '
+        sql += f' WHERE {self.primary} = '
         sql += "'{item_data[self.primary]}'"
         prepared_sql = DB.prepare(sql)
         count = DB.execute_input(prepared_sql)
@@ -117,3 +117,9 @@ class General():
             item_id = self.create(item_data)
 
         return item_id
+
+    def delete(self, item_id):
+        sql = f'DELETE FROM GROUP5.{self.table_name} \
+               WHERE {self.primary} = {item_id}'
+        data = DB.execute(DB.connect(), sql)
+        return

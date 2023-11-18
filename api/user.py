@@ -19,7 +19,7 @@ class TrackUser(General):
         self.table_name = "TrackUser"
         self.attributes = ['userId','userName','password','supervisorId',
                            'adderId']
-        self.primary = "userId"
+        self.primary = '"userId"'
         self.list_page = "viewuser.html"
         self.detail_page = "userdetail.html"
         self.generate_id = False

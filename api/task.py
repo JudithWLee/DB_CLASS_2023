@@ -22,7 +22,7 @@ class Task(General):
         self.table_name = "Task"
         self.attributes = ["taskId","status","description","taskOwner","title",
                            "dueDate","assigner","creator","assigntime"]
-        self.primary = "taskId"
+        self.primary = '"taskId"'
         self.list_page = "viewissue.html"
         self.detail_page = "issuedetail.html"
         self.generate_id = True
@@ -64,7 +64,6 @@ class Task(General):
                 AND t.TITLE LIKE '%{user_filter.keyword}%' \
                 ORDER BY {user_filter.order_by} {user_filter.order}"
         data = DB.fetchall(DB.execute(DB.connect(), sql))
-        print(sql)
         for entry in data:
             data_list.append(dict(zip(title, entry)))
         return data_list

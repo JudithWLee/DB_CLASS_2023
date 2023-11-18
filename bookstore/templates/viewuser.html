@@ -13,8 +13,8 @@
 
 <br/>
 <div class="container-xl">
-  <form method="post" action={{ url_for('bookstore.list_table', target_table="user") }}>
-    <form  method='post' action={{ url_for('bookstore.list_table', target_table="user") }} >
+  <form method="post" action={{ url_for('tracker.list_table', target_table="user") }}>
+    <form  method='post' action={{ url_for('tracker.list_table', target_table="user") }} >
       <div class="row">
         <div class="col-sm-12">
           <button type="submit" class="btn btn-outline-primary register_btn">search</button>
@@ -49,7 +49,7 @@
       <tr>
         <td width="20%">
           <center>
-	    <a href="{{ url_for('bookstore.show_detail', target_table='user', id=i.userId) }}" class="btn btn-outline-success">
+	    <a href="{{ url_for('tracker.show_detail', target_table='user', id=i.userId) }}" class="btn btn-outline-success">
               View Detail
 	    </a>
           </center>

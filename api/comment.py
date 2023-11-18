@@ -14,7 +14,7 @@ class Comment(General):
     """
     def __init__(self, item_id = None):
         self.taskId = item_id
-        self.table_name = "COMMENT"
+        self.table_name = "TASKCOMMENT"
         self.attributes = ["commentId","commenterId","taskId","content",
                            "commentTime","lastUpdateTime"]
         self.primary = "commentId"

@@ -47,7 +47,7 @@ def login():
             login_user(user)
 
             # TODO change url to rendering list issue
-            return redirect(url_for('bookstore.list_table',
+            return redirect(url_for('tracker.list_table',
                                     target_table = 'task'))
         
         else:
