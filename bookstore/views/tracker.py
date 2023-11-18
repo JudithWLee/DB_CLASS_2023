@@ -61,12 +61,15 @@ class Tracker():
         data = self.my_table.list_item(self.filter)
         return render_template(self.my_table.list_page, item_list = data)
 
-    def delete_comment(self):
+    def delete(self):
         self.my_table.delete(self.item_id)
-        # setting things back to task so that we can show the task detail
-        self.my_table = Task()
-        self.item_id = self.task_id
-        return self.show_detail()
+        if self.target_table == "comment":
+            # setting things back to task so that we can show the task detail
+            self.my_table = Task()
+            self.item_id = self.task_id
+            return self.show_detail()
+        else:
+            return self.list_table()
 
     def new(self):
         new_id = self.my_table.save(self.content)
@@ -94,8 +97,8 @@ def list_table():
     my_tracker = Tracker(request.args)
     return my_tracker.list_table()
 
-@tracker.route('/delete_comment', methods=['GET', 'POST'])
-def delete_comment():
+@tracker.route('/delete', methods=['GET', 'POST'])
+def delete():
     print("in delete comment") # DEBUG
     my_tracker = Tracker(request.args)
     return my_tracker.delete_comment()
