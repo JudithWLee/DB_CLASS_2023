@@ -10,7 +10,7 @@
   <br/>
   <div class="container-xl">
 
-    <form  method='post' action={{ url_for('bookstore.save', target_table='task') }} >
+    <form  method='post' action={{ url_for('tracker.save', target_table='task') }} >
       <div class="row">
         <div class="col-sm-12">
           <div name="LV1_button">
@@ -145,7 +145,10 @@
         <table>
           <tr>
             <td>
-              Comment &nbsp&nbsp Id:{{j.commentId}} &nbsp&nbsp&nbsp&nbsp
+              <span style="font-weight: 800;">Comment</span><span style="color: gray;">(Id:{{j.commentId}})</span>
+            </td>
+            <td>
+              &nbsp&nbsp&nbsp&nbsp
             </td>
             <td>
               <form  method='post' action={{ url_for('tracker.delete', target_table="comment", id=j.commentId) }} >
@@ -158,26 +161,16 @@
        <div class="card-body">
         <div class="row">
           <div class="col-sm-2">
-            Commenter:
+            <span style="font-weight: 800;"> Commenter:</span>
+            <br />
+            <span style="color: gray;">{{j.commenterName}}</span>
+            <br />
+            <span style="font-weight: 800;"> CommentTime:</span>
+            <br />
+            <span style="color: gray;">{{j.commentTime}}</span>
           </div>
           <div class="col-sm-10">
-            {{j.commenterName}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-2">
-            CommentTime:
-          </div>
-          <div class="col-sm-10">
-            {{j.commentTime}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-2">
-            Comment:&nbsp                        
-          </div>
-          <div class="col-sm-10">
-            <textarea rows="4" cols="50" readonly="true">{{j.content}}</textarea>
+            <textarea rows="4" cols="50" readonly="true" style="border: 0;resize: none;">{{j.content}}</textarea>
           </div>
         </div>
       </div>
@@ -188,7 +181,7 @@
         Leave Your Comment
       </div>
       <div class="card-body">
-        <form  method='post' action={{ url_for('tracker.list_table', target_table='Comment') }} >
+        <form  method='post' action={{ url_for('tracker.new', target_table='Comment') }} >
           <div class="row">
             <div class="col-sm-12">
               <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>
