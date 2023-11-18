@@ -99,7 +99,6 @@ def list_table():
 
 @tracker.route('/delete', methods=['GET', 'POST'])
 def delete():
-    print("in delete comment") # DEBUG
     my_tracker = Tracker(request.args)
     return my_tracker.delete_comment()
 
@@ -110,5 +109,6 @@ def empty_form():
 
 @tracker.route('/new', methods=['GET', 'POST'])
 def new():
+    print("new!") # DEBUG
     my_tracker = Tracker(request.args)
     return my_tracker.new
