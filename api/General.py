@@ -95,6 +95,8 @@ class General():
         sql += f'"{list(item_data.keys())[-1]}" = '
         sql += f"'{list(item_data.values())[-1]}' "
         sql += 'WHERE "{self.primary}" = {item_data[self.primary]}'
+        DB.execute_input(DB.prepare(sql),
+                         item_data)
         return item_data[self.primary]
 
     def save(self, item_data: dict):
