@@ -23,19 +23,20 @@ class Comment(General):
         self.generate_id = True
 
     # NOTE I think this should be done in task instead
-    def get_all_comments(self):
+    def list_items(self):
         """Get all comments for a taskId"""
         # TODO make dates pretty format
         # TODO get commenter name using LEFT JOIN
-        title = self.attributes.append("userName")
-        sql = 'SELECT c.*, u.userName \
-               FROM TASK t \
-               LEFT JOIN TASKCOMMENT c ON t.tId = c.taskId \
-               LEFT JOIN TRASKUSER u ON c.commenterId = u."userId" \
-               WHERE t.tId = :taskid'
-        data =  DB.fetchall(DB.execute_input(DB.prepare(sql),
-                                             {'taskid': self.taskid}))
+        title = self.attributes.copy()
+        title.append("commenterName")
+        sql =  'SELECT c.commentId, c.commenterId, c.taskId, c.content, '
+        sql += "TO_CHAR(c.commentTime, 'YYYY/MM/DD') commentTime, "
+        sql +=f'c.lastUpdateTime, u.userName \
+               FROM TASKCOMMENT c \
+               LEFT JOIN TRACKUSER u ON c.commenterId = u."userId" \
+               WHERE c.taskId = {self.taskId}'
+        data = DB.fetchall(DB.execute(DB.connect(), sql))
         data_list = []
         for entry in data:
-            data_list.append(dict(zip(title, data[0])))
+            data_list.append(dict(zip(title, entry)))
         return data_list

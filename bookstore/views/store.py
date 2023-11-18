@@ -341,7 +341,10 @@ def show_detail():
     item_id = request.args["id"]
     my_table = table_class[target_table](item_id)
     target_data = my_table.get_detail(item_id)
-    return render_template(my_table.detail_page, item_detail = target_data)
+    comments = Comment(item_id)
+    comment_list = comments.list_items()
+    return render_template(my_table.detail_page, item_detail = target_data,
+                           comment_list = comment_list)
 
 @login_required
 @store.route('/empty_form')
@@ -360,6 +363,13 @@ def empty_form():
 # TODO finish
 @store.route('/delete')
 def delete():
+    table_class = {
+        "task": Task,
+        "issue": Task,
+        "user": TrackUser,
+        "feature": Feature,
+        "comment": Comment
+    }
     pass
 
 # TODO finish
