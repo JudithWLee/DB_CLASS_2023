@@ -107,20 +107,17 @@ class Task(General):
 
     def edit(self, item_data: dict):
         # preprocess task owner and assigner names
-        if item_data['taskOwner'] not in (None, ''):
-            sql = f'SELECT u."userId" \
-                   FROM TRACKUSER u '
-            sql+= f"WHERE u.userName = '{item_data['taskOwner']}'"
-            taskOwner = DB.fetchall(DB.execute(DB.connect(),sql))[0][0]
-            item_data['taskOwner'] = taskOwner
+        sql = f'SELECT u."userId" \
+               FROM TRACKUSER u '
+        sql+= f"WHERE u.userName = '{item_data['taskOwner']}'"
+        taskOwner = DB.fetchall(DB.execute(DB.connect(),sql))[0][0]
+        sql = f'SELECT u."userId" \
+               FROM TRACKUSER u '
+        sql+= f"WHERE u.userName = '{item_data['Assigner']}'"
+        Assigner = DB.fetchall(DB.execute(DB.connect(),sql))[0][0]
 
-        if item_data['Assigner'] not in (None, ''):
-            sql = f'SELECT u."userId" \
-                   FROM TRACKUSER u '
-            sql+= f"WHERE u.userName = '{item_data['Assigner']}'"
-            Assigner = DB.fetchall(DB.execute(DB.connect(),sql))[0][0]
-            item_data['Assigner'] = Assigner
-
+        item_data['taskOwner'] = taskOwner
+        item_data['Assigner'] = Assigner
         return super().edit(item_data)
 
     def create(self, item_data: dict):
