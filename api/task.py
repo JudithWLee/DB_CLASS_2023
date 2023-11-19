@@ -2,6 +2,7 @@ from link import *
 from api.filter import Filter
 from api.General import General
 from api.sql import DB
+from datetime import datetime
 class Task(General):
     """AKA issue.
 
@@ -21,8 +22,10 @@ class Task(General):
         self.taskId = item_id
         self.table_name = "Task"
         self.attributes = ["taskId","status","description","taskOwner","title",
-                           "dueDate","assigner","creator","assigntime"]
-        self.primary = '"taskId"'
+                           "dueDate","assigner","creator","AssignTime"]
+        self.date_attributes = ["dueDate", "AssignTime"]
+        self.primary_sql = '"taskId"'
+        self.primary_python = 'taskId'
         self.list_page = "viewissue.html"
         self.detail_page = "issuedetail.html"
         self.generate_id = True
@@ -80,6 +83,7 @@ class Task(General):
         Returns:
             task details
         """
+        print(f"get detail taskid: {taskid}") # DEBUG
         title = self.attributes.copy()
         title.extend(['ownerName', 'assignerName','creatorName'])
 
@@ -100,3 +104,17 @@ class Task(General):
                                             {'taskid': taskid}))
         return dict(zip(title, data[0]))
 
+    def edit(self, item_data: dict):
+        # preprocess task owner and assigner names
+        sql = f'SELECT u."userId" \
+               FROM TRACKUSER u '
+        sql+= f"WHERE u.userName = '{item_data['taskOwner']}'"
+        taskOwner = DB.fetchall(DB.execute(DB.connect(),sql))[0][0]
+        sql = f'SELECT u."userId" \
+               FROM TRACKUSER u '
+        sql+= f"WHERE u.userName = '{item_data['Assigner']}'"
+        Assigner = DB.fetchall(DB.execute(DB.connect(),sql))[0][0]
+
+        item_data['taskOwner'] = taskOwner
+        item_data['Assigner'] = Assigner
+        return super().edit(item_data)

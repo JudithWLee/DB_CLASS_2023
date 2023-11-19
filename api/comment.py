@@ -20,7 +20,8 @@ class Comment(General):
         self.table_name = "TASKCOMMENT"
         self.attributes = ["commentId","COMMENTERID",'taskId',"content",
                            "commentTime","lastUpdateTime"]
-        self.primary = "commentId"
+        self.primary_sql = "commentId"
+        self.primary_python = "commentId"
         self.list_page = None
         self.detail_page = None
         self.generate_id = True

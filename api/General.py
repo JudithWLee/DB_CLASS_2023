@@ -9,7 +9,8 @@ class General():
         self.item_id = item_id
         self.table_name = "GENERAL"
         self.attributes = []
-        self.primary = "key"
+        self.primary_sql = "key"
+        self.primary_python = "key"
         self.generate_id = False
 
     def list_items(self):
@@ -34,15 +35,15 @@ class General():
 
         if self.generate_id:
             item_id = self._gen_id()
-            item_data[self.primary] = item_id
+            item_data[self.primary_python] = item_id
 
         return item_data
 
     def _gen_id(self):
-        sql = f'SELECT {self.primary} \
+        sql = f'SELECT {self.primary_sql} \
                 FROM {self.table_name} \
-                WHERE {self.primary} = ( \
-                  SELECT MAX(TO_NUMBER({self.primary})) \
+                WHERE {self.primary_sql} = ( \
+                  SELECT MAX(TO_NUMBER({self.primary_sql})) \
                   FROM {self.table_name} \
                 )'
         data = DB.fetchall(DB.execute(DB.connect(), sql))
@@ -61,7 +62,7 @@ class General():
         """
         # generate id if needed
         if self.generate_id:
-            item_data[self.primary] = self._gen_id()
+            item_data[self.primary_python] = self._gen_id()
 
         sql = f'INSERT INTO {self.table_name} ('
         attr_sql = ''
@@ -80,9 +81,10 @@ class General():
         sql += 'VALUES ('
         sql += value_sql
 
+        print(sql) # DEBUG
         DB.execute_input(DB.prepare(sql),
                          item_data)
-        return item_data[self.primary]
+        return item_data[self.primary_python]
 
     def edit(self, item_data: dict):
         """Update table entry.
@@ -90,17 +92,24 @@ class General():
         UPDATE group5.TRACKUSER SET ADDERID = 'V00001',username = '黃品堯'
         WHERE  "userId" = '0'
         """
-        sql = f'UPDATE group5.{self.table_name} SET'
+        sql = f'UPDATE group5.{self.table_name} SET '
 
         for attr, value in list(item_data.items())[:-1]:
-            sql += f'{attr} = '
-            sql += f"'{value}',"
+            if attr == self.primary_python:
+                sql += f'{self.primary_sql} = '
+            else:
+                sql += f'{attr} = '
+            if attr in self.date_attributes:
+                sql_part = f" TO_DATE('{value}', 'YYYY/MM/DD'), "
+                sql += sql_part
+            else:
+                sql += f"'{value}',"
         sql += f'{list(item_data.keys())[-1]} = '
         sql += f"'{list(item_data.values())[-1]}' "
-        sql += f'WHERE {self.primary} = {item_data[self.primary]}'
-        DB.execute_input(DB.prepare(sql),
-                         item_data)
-        return item_data[self.primary]
+        sql += f'WHERE {self.primary_sql} = {item_data[self.primary_python]}'
+        print(sql)
+        DB.execute(DB.connect(), sql)
+        return item_data[self.primary_python]
 
     def save(self, item_data: dict):
         """Save data input by user.
@@ -110,12 +119,15 @@ class General():
         """
         # check if item exists using primary key
         sql = f'SELECT COUNT(*) FROM GROUP5.{self.table_name}'
-        sql += f' WHERE {self.primary} = '
-        sql += f"'{item_data.get(self.primary, -1)}'"
+        sql += f' WHERE {self.primary_sql} = '
+        sql += f"'{item_data.get(self.primary_python, -1)}'"
         with DB.connect() as connection:
             # Execute the query with bind variables to prevent SQL injection
             count = connection.execute(sql).fetchone()[0]
         # call corresponding function
+        print(sql) # DEBUG
+        print(f"count: {count}") # DEBUG
+        print(f"item_data: {item_data}") # DEBUG
         if count:
             item_id = self.edit(item_data)
         else:
@@ -125,7 +137,7 @@ class General():
 
     def delete(self, item_id):
         sql = f'DELETE FROM GROUP5.{self.table_name} \
-               WHERE {self.primary} = {item_id}'
+               WHERE {self.primary_sql} = {item_id}'
         print(sql)
         data = DB.execute(DB.connect(), sql)
         return

@@ -10,50 +10,16 @@
   <br/>
   <div class="container-xl">
 
-    <form  method='post' action={{ url_for('tracker.save', target_table='task') }} >
-      <div class="row">
-        <div class="col-sm-12">
-          <div name="LV1_button">
-            <table>
-              <tr>
-                <td>
-                  <!-- <form  method='post' action={{ url_for('tracker.empty_form', target_data='Task') }} >
-                    <button type="submit" class="btn btn-outline-success register_btn">New issue</button>
-                  </form> -->
-                </td>
-                <td>
-                  <form  method='post' action={{ url_for('bookstore.edit', target_data='Task') }} >
-                    <button type="submit" class="btn btn-outline-primary register_btn">edit</button>
-                  </form>
-                </td>
-                <td>
-                  <form  method='post' action={{ url_for('bookstore.delete', target_data='Task') }} >
-                    <button type="submit" class="btn btn-outline-danger register_btn">delete</button>
-                  </form>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <div name="LV2_button" style="display: none;">
-            <table>
-              <tr>
-                <td>
-                  <button type="submit" class="btn btn-outline-primary register_btn">save</button>
-                </td>
-                <td>
-                  <form  method='post' action={{ url_for('tracker.show_detail', target_data='task', id=item_detail.task_id) }} >
-                    <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
-                  </form>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-      <br />
-      <div class="row">
-        <div class="col-sm-12">
-          <div name="divShow">
+    {% if edit_mode %}
+      <td>
+        <form  method='post' action={{ url_for('tracker.show_detail', target_table='Task', id=item_detail.taskId, debug=3) }} >
+          <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
+        </form>
+      </td>
+      <td>
+        <form  method='post' action={{ url_for('tracker.save', target_table='Task', id=item_detail.taskId) }} >
+          <button type="submit" class="btn btn-outline-primary register_btn">save</button>
+          <div name="divEdit">
             <table class="table table-bordered">
               <tr>
                 <th><center>taskID</center></th>
@@ -62,10 +28,11 @@
                 <th><center>dueDate</center></th>
               </tr>
               <tr>
-                <td> <center>{{ item_detail.taskId }}</center></td>
-                <td> <center>{{ item_detail.creatorName }}</center></td>
-                <td> <center>{{ item_detail.ownerName }}</center></td>
-                <td> <center>{{ item_detail.dueDate }}</center></td>
+                <td><center>{{ item_detail.taskId }}</center></td>
+                <td><center>{{ item_detail.creatorName }}</center></td>
+		<input type="hidden" name="taskId" value="{{ item_detail.taskId }}">
+                <td><center><input name="taskOwner" type="search" class="form-control" value="{{ item_detail.ownerName }}"></center></td>
+                <td><center><input name="dueDate" type="search" class="form-control" value="{{ item_detail.dueDate }}"></center></td>
               </tr>
               <tr>
                 <th><center>Assigner</center></th>
@@ -74,50 +41,19 @@
                 <th><center></center></th>
               </tr>
               <tr>
-                <td> <center>{{ item_detail.assignerName }}</center></td>
-                <td> <center>{{ item_detail.assigntime }}</center></td>
-                <td> <center>{{ item_detail.status }}</center></td>
-                <td> <center></center></td>
-              </tr>
-            </table>
-            <br />
-            <table class="table table-bordered">
-              <tr><th><center>Title</center></th><td><center>{{ item_detail.title }}</center></td></tr>
-              <tr><th><center>Description</center></th><td><center>{{ item_detail.description }}</center></td></tr>
-            </table>
-          </div>
-          <div name="divEdit" style="display: none;">
-            <table class="table table-bordered">
-              <tr>
-                <th><center>taskID</center></th>
-                <th><center>Creator</center></th>
-                <th><center>Owner</center></th>
-                <th><center>dueDate</center></th>
-              </tr>
-              <tr>
-                <td> <center>{{ item_detail.taskId }}</center></td>
-                <td> <center>{{ item_detail.creatorName }}</center></td>
-                <td> <center><input name="input_Owner_issuedetail_edit" type="search" class="form-control"></center></td>
-                <td> <center><input name="input_dueDate_issuedetail_edit" type="search" class="form-control"></center></td>
-              </tr>
-              <tr>
-                <th><center>Assigner</center></th>
-                <th><center>AssignTime</center></th>
-                <th><center>Status</center></th>
-                <th><center></center></th>
-              </tr>
-              <tr>
-                <td> <center>{{ item_detail.assignerName }}</center></td>
-                <td> <center>{{ item_detail.assigntime }}</center></td>
-                <td> <center>
-                  <select class="form-control" name="select_status_issuedetail_edit">
-                    <option value="open">open</option>
-                    <option value="inprogress">inprogress</option>
-                    <option value="review">review</option>
-                    <option value="close">close</option>
-                  </select>
-                </center></td>
-                <td> <center></center></td>
+                <td><center><input name="Assigner" type="search" class="form-control" value="{{ item_detail.assignerName }}"></center></td>
+                <td><center><input name="AssignTime" type="search" class="form-control" value="{{ item_detail.assigntime }}"></center></td>
+                <td>
+                  <center>
+                    <select class="form-control" name="status">
+                      <option value="open" {% if item_detail.status == 'open' %}selected{% endif %}>open</option>
+                      <option value="inprogress" {% if item_detail.status == 'inprogress' %}selected{% endif %}>inprogress</option>
+                      <option value="review" {% if item_detail.status == 'review' %}selected{% endif %}>review</option>
+                      <option value="close" {% if item_detail.status == 'close' %}selected{% endif %}>close</option>
+                    </select>
+                  </center>
+                </td>
+                <td><center></center></td>
               </tr>
             </table>
             <br />
@@ -126,16 +62,63 @@
                 <th><center>Title</center></th>
               </tr>
               <tr>
-                <td><center><input name="input_title_issuedetail_edit" type="search" class="form-control"></center></td>
+                <td><center><input name="title" type="search" class="form-control" value="{{ item_detail.title }}"></center></td>
               </tr>
               <tr>
                 <th><center>Description</center></th>
               </tr>
               <tr>
-                <td> <center><input name="input_discription_issuedetail_edit" type="search" class="form-control"></center></td>
+                <td><center><input name="description" type="search" class="form-control" value="{{ item_detail.description }}"></center></td>
               </tr>
             </table>
           </div>
+        </form>
+      </td>
+    {% else %}
+      <td>
+        <form  method='post' action={{ url_for('tracker.edit', target_table='Task', id=item_detail.taskId) }} >
+          <button type="submit" class="btn btn-outline-primary register_btn">edit</button>
+        </form>
+      </td>
+    {% endif %}
+      <br />
+      <div class="row">
+        <div class="col-sm-12">
+          {% if not edit_mode %}
+            <div name="divShow">
+              <table class="table table-bordered">
+                <tr>
+                  <th><center>taskID</center></th>
+                  <th><center>Creator</center></th>
+                  <th><center>Owner</center></th>
+                  <th><center>dueDate</center></th>
+                </tr>
+                <tr>
+                  <td> <center>{{ item_detail.taskId }}</center></td>
+                  <td> <center>{{ item_detail.creatorName }}</center></td>
+                  <td> <center>{{ item_detail.ownerName }}</center></td>
+                  <td> <center>{{ item_detail.dueDate }}</center></td>
+                </tr>
+                <tr>
+                  <th><center>Assigner</center></th>
+                  <th><center>AssignTime</center></th>
+                  <th><center>Status</center></th>
+                  <th><center></center></th>
+                </tr>
+                <tr>
+                  <td> <center>{{ item_detail.assignerName }}</center></td>
+                  <td> <center>{{ item_detail.assigntime }}</center></td>
+                  <td> <center>{{ item_detail.status }}</center></td>
+                  <td> <center></center></td>
+                </tr>
+              </table>
+              <br />
+              <table class="table table-bordered">
+                <tr><th><center>Title</center></th><td><center>{{ item_detail.title }}</center></td></tr>
+                <tr><th><center>Description</center></th><td><center>{{ item_detail.description }}</center></td></tr>
+              </table>
+            </div>
+          {% endif %}
         </div>
       </div>
     </form>
@@ -176,26 +159,28 @@
       </div>
     </div>
     {% endfor %}
-    <div class="card" style="margin-top: 10px;">
-      <div class="card-header">
-        Leave Your Comment
-      </div>
-      <div class="card-body">
-        <form  method='post' action={{ url_for('tracker.new', target_table='Comment', task_id=item_detail.taskId) }} >
-          <div class="row">
-            <div class="col-sm-12">
-              <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>
+    {% if not edit_mode %}
+      <div class="card" style="margin-top: 10px;">
+        <div class="card-header">
+          Leave Your Comment
+        </div>
+        <div class="card-body">
+          <form  method='post' action={{ url_for('tracker.new', target_table='Comment', task_id=item_detail.taskId) }} >
+            <div class="row">
+              <div class="col-sm-12">
+                <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>
+              </div>
             </div>
-          </div>
-          <br />
-          <div class="row">
-            <div class="col-sm-12">
-              <textarea id="content" name="content" rows="4" cols="50"></textarea>
+            <br />
+            <div class="row">
+              <div class="col-sm-12">
+                <textarea id="content" name="content" rows="4" cols="50"></textarea>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    {% endif %}
   </div>
 {% endblock content %}
 

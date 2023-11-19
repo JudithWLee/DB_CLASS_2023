@@ -23,7 +23,8 @@ class Feature(General):
         self.table_name = "FEATURE"
         self.attributes = ["featureId", "creatorId", "maintainerId", "title",
                            "description"]
-        self.primary = "featureId"
+        self.primary_sql = "featureId"
+        self.primary_python = "featureId"
         self.list_page = "viewfeature.html"
         self.detail_page = "featuredetail.html"
         self.generate_id = True
