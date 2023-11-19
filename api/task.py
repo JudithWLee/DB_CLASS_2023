@@ -99,3 +99,4 @@ class Task(General):
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'taskid': taskid}))
         return dict(zip(title, data[0]))
+

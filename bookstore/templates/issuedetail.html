@@ -151,7 +151,7 @@
               &nbsp&nbsp&nbsp&nbsp
             </td>
             <td>
-              <form  method='post' action={{ url_for('tracker.delete', target_table="comment", id=j.commentId) }} >
+              <form  method='post' action={{ url_for('tracker.delete', target_table="comment", id=j.commentId, task_id=item_detail.taskId) }} >
                 <button type="submit" class="btn btn-outline-primary btn-sm register_btn">Delete</button>
               </form>
             </td>
@@ -181,7 +181,7 @@
         Leave Your Comment
       </div>
       <div class="card-body">
-        <form  method='post' action={{ url_for('tracker.new', target_table='Comment', task_id=item_detail.task_id) }} >
+        <form  method='post' action={{ url_for('tracker.new', target_table='Comment', task_id=item_detail.taskId) }} >
           <div class="row">
             <div class="col-sm-12">
               <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>

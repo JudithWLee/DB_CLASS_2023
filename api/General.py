@@ -38,12 +38,6 @@ class General():
         return item_data
 
     def _gen_id(self):
-        #sql=f'SELECT {self.primary} \
-        #     FROM {self.table_name} \
-        #     WHERE {self.primary} = ( \
-        #         SELECT MAX(TO_NUMBER({self.primary}) DEFAULT NULL ON CONVERSION ERROR) \
-        #         FROM {self.table_name} \
-        #     )'
         sql = f'SELECT {self.primary} \
                 FROM {self.table_name} \
                 WHERE {self.primary} = ( \
@@ -72,11 +66,8 @@ class General():
         attr_sql = ''
         value_sql = ''
         for attr in self.attributes[:-1]:
-            print(attr) # DEBUG
             # put None in absent attributes
             item_data[attr] = item_data.get(attr, None)
-            print(item_data[attr]) # DEBUG
-            print('-'*5) # DEBUG
             # set attributes
             attr_sql += f'"{attr}",'
             # set values
@@ -116,7 +107,6 @@ class General():
         if user id exists, call edit user
         else call create_new_user
         """
-        # TODO create new id if is none
         # check if item exists using primary key
         sql = f'SELECT COUNT(*) FROM GROUP5.{self.table_name}'
         sql += f' WHERE {self.primary} = '
@@ -135,5 +125,6 @@ class General():
     def delete(self, item_id):
         sql = f'DELETE FROM GROUP5.{self.table_name} \
                WHERE {self.primary} = {item_id}'
+        print(sql)
         data = DB.execute(DB.connect(), sql)
         return

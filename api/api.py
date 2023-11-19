@@ -35,7 +35,6 @@ def login():
         password = request.form['password']
         user = TrackUser(account)
         data = user.get_password()
-        print(f"password:{data}") # DEBUG
         #data = user.get_detail()
         if not data:
             flash('*Password or account incorrect')

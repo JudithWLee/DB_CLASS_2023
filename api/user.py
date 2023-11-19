@@ -60,7 +60,6 @@ class TrackUser(General):
                WHERE u."userId" = :userId'
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'userId': userId}))
-        print(data) # DEBUG
         return dict(zip(title, data[0]))
 
     def create(self, userId, item_data):

@@ -51,7 +51,6 @@ class Tracker():
         target_data = self.my_table.list_items()
         if target_data is None:
             target_data = []
-        print(target_data) # DEBUG
         return render_template(self.my_table.list_page, item_list = target_data)
 
     def _list_task(self):
@@ -65,6 +64,7 @@ class Tracker():
         self.my_table.delete(self.item_id)
         if self.target_table == "comment":
             # setting things back to task so that we can show the task detail
+            self.target_table = "task"
             self.my_table = Task()
             self.item_id = self.task_id
             return self.show_detail()
@@ -112,7 +112,6 @@ def empty_form():
 
 @tracker.route('/new', methods=['GET', 'POST'])
 def new():
-    print("new!") # DEBUG
     my_tracker = Tracker(request.args)
     return my_tracker.new()
 
