@@ -71,7 +71,10 @@ class General():
             # put None in absent attributes
             item_data[attr] = item_data.get(attr, None)
             # set attributes
-            attr_sql += f'{attr},'
+            if attr == self.primary_python:
+                sql += f'{self.primary_sql}, '
+            else:
+                sql += f'{attr}, '
             # set values
             value_sql += f':{attr},'
         attr_sql += f'{self.attributes[-1]}) '
@@ -82,6 +85,7 @@ class General():
         sql += value_sql
 
         print(sql) # DEBUG
+        print(item_data) # DEBUG
         DB.execute_input(DB.prepare(sql),
                          item_data)
         return item_data[self.primary_python]
