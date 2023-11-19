@@ -11,69 +11,79 @@
   <div class="container-xl">
 
     {% if edit_mode %}
-      <td>
-        <form  method='post' action={{ url_for('tracker.show_detail', target_table='Task', id=item_detail.taskId, debug=3) }} >
-          <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
-        </form>
-      </td>
-      <td>
-        <form  method='post' action={{ url_for('tracker.save', target_table='Task', id=item_detail.taskId) }} >
-          <button type="submit" class="btn btn-outline-primary register_btn">save</button>
-          <div name="divEdit">
-            <table class="table table-bordered">
-              <tr>
-                <th><center>taskID</center></th>
-                <th><center>Creator</center></th>
-                <th><center>Owner</center></th>
-                <th><center>dueDate</center></th>
-              </tr>
-              <tr>
-                <td><center>{{ item_detail.taskId }}</center></td>
-                <td><center>{{ item_detail.creatorName }}</center></td>
-		<input type="hidden" name="taskId" value="{{ item_detail.taskId }}">
-                <td><center><input name="taskOwner" type="search" class="form-control" value="{{ item_detail.ownerName }}"></center></td>
-                <td><center><input name="dueDate" type="search" class="form-control" value="{{ item_detail.dueDate }}"></center></td>
-              </tr>
-              <tr>
-                <th><center>Assigner</center></th>
-                <th><center>AssignTime</center></th>
-                <th><center>Status</center></th>
-                <th><center></center></th>
-              </tr>
-              <tr>
-                <td><center><input name="Assigner" type="search" class="form-control" value="{{ item_detail.assignerName }}"></center></td>
-                <td><center><input name="AssignTime" type="search" class="form-control" value="{{ item_detail.assigntime }}"></center></td>
-                <td>
-                  <center>
-                    <select class="form-control" name="status">
-                      <option value="open" {% if item_detail.status == 'open' %}selected{% endif %}>open</option>
-                      <option value="inprogress" {% if item_detail.status == 'inprogress' %}selected{% endif %}>inprogress</option>
-                      <option value="review" {% if item_detail.status == 'review' %}selected{% endif %}>review</option>
-                      <option value="close" {% if item_detail.status == 'close' %}selected{% endif %}>close</option>
-                    </select>
-                  </center>
-                </td>
-                <td><center></center></td>
-              </tr>
-            </table>
-            <br />
-            <table class="table table-bordered">
-              <tr>
-                <th><center>Title</center></th>
-              </tr>
-              <tr>
-                <td><center><input name="title" type="search" class="form-control" value="{{ item_detail.title }}"></center></td>
-              </tr>
-              <tr>
-                <th><center>Description</center></th>
-              </tr>
-              <tr>
-                <td><center><input name="description" type="search" class="form-control" value="{{ item_detail.description }}"></center></td>
-              </tr>
-            </table>
-          </div>
-        </form>
-      </td>
+    <form  method='post' action={{ url_for('tracker.save', target_table='Task', id=item_detail.taskId) }} >
+      <table>
+        <tr>
+          <td style="vertical-align: top;">
+            <form  method='post' action={{ url_for('tracker.show_detail', target_table='Task', id=item_detail.taskId, debug=3) }} >
+              <button type="submit" class="btn btn-outline-primary register_btn">cancel</button>
+            </form>
+          </td>
+          <td>         
+              <button type="submit" class="btn btn-outline-primary register_btn">save</button>
+          </td>
+        </tr>
+      </table>
+      <br />
+          <td>
+            <!-- <form  method='post' action={{ url_for('tracker.save', target_table='Task', id=item_detail.taskId) }} >
+              <button type="submit" class="btn btn-outline-primary register_btn">save</button> -->
+              <div name="divEdit">
+                <table class="table table-bordered">
+                  <tr>
+                    <th><center>taskID</center></th>
+                    <th><center>Creator</center></th>
+                    <th><center>Owner</center></th>
+                    <th><center>dueDate</center></th>
+                  </tr>
+                  <tr>
+                    <td><center>{{ item_detail.taskId }}</center></td>
+                    <td><center>{{ item_detail.creatorName }}</center></td>
+                    <input type="hidden" name="taskId" value="{{ item_detail.taskId }}">
+                    <td><center><input name="taskOwner" type="search" class="form-control" value="{{ item_detail.ownerName }}"></center></td>
+                    <td><center><input name="dueDate" type="search" class="form-control" value="{{ item_detail.dueDate }}"></center></td>
+                  </tr>
+                  <tr>
+                    <th><center>Assigner</center></th>
+                    <th><center>AssignTime</center></th>
+                    <th><center>Status</center></th>
+                    <th><center></center></th>
+                  </tr>
+                  <tr>
+                    <td><center><input name="Assigner" type="search" class="form-control" value="{{ item_detail.assignerName }}"></center></td>
+                    <td><center><input name="AssignTime" type="search" class="form-control" value="{{ item_detail.assigntime }}"></center></td>
+                    <td>
+                      <center>
+                        <select class="form-control" name="status">
+                          <option value="open" {% if item_detail.status == 'open' %}selected{% endif %}>open</option>
+                          <option value="inprogress" {% if item_detail.status == 'inprogress' %}selected{% endif %}>inprogress</option>
+                          <option value="review" {% if item_detail.status == 'review' %}selected{% endif %}>review</option>
+                          <option value="close" {% if item_detail.status == 'close' %}selected{% endif %}>close</option>
+                        </select>
+                      </center>
+                    </td>
+                    <td><center></center></td>
+                  </tr>
+                </table>
+                <br />
+                <table class="table table-bordered">
+                  <tr>
+                    <th><center>Title</center></th>
+                  </tr>
+                  <tr>
+                    <td><center><input name="title" type="search" class="form-control" value="{{ item_detail.title }}"></center></td>
+                  </tr>
+                  <tr>
+                    <th><center>Description</center></th>
+                  </tr>
+                  <tr>
+                    <td><center><input name="description" type="search" class="form-control" value="{{ item_detail.description }}"></center></td>
+                  </tr>
+                </table>
+              </div>
+            <!-- </form> -->
+          </td>
+    </form>
     {% else %}
       <td>
         <form  method='post' action={{ url_for('tracker.edit', target_table='Task', id=item_detail.taskId) }} >
