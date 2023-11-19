@@ -1,3 +1,4 @@
+from datetime import datetime
 from link import *
 from api.General import General
 from api.sql import DB
@@ -40,3 +41,9 @@ class Comment(General):
         for entry in data:
             data_list.append(dict(zip(title, entry)))
         return data_list
+
+    def create(self, item_data: dict):
+        # first set commenterid, taskid, comment time, and last updated time
+        item_data['taskId'] = self.taskId
+        item_data['commentTime'] = datetime.now()
+        super().create(item_data)

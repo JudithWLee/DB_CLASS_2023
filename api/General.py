@@ -38,17 +38,23 @@ class General():
         return item_data
 
     def _gen_id(self):
-        sql=f'SELECT {self.primary} \
-             FROM {self.table_name} \
-             WHERE {self.primary} = ( \
-                 SELECT MAX(TO_NUMBER({self.primary}) DEFAULT NULL ON CONVERSION ERROR) \
-                 FROM {self.table_name} \
-             )'
+        #sql=f'SELECT {self.primary} \
+        #     FROM {self.table_name} \
+        #     WHERE {self.primary} = ( \
+        #         SELECT MAX(TO_NUMBER({self.primary}) DEFAULT NULL ON CONVERSION ERROR) \
+        #         FROM {self.table_name} \
+        #     )'
+        sql = f'SELECT {self.primary} \
+                FROM {self.table_name} \
+                WHERE {self.primary} = ( \
+                  SELECT MAX(TO_NUMBER({self.primary})) \
+                  FROM {self.table_name} \
+                )'
         data = DB.fetchall(DB.execute(DB.connect(), sql))
         if not data:
             item_id = 0
         else:
-            item_id = data[0][0] + 1
+            item_id = int(data[0][0]) + 1
         return item_id
 
     def create(self, item_data: dict):
@@ -63,9 +69,14 @@ class General():
             item_data[self.primary] = self._gen_id()
 
         sql = f'INSERT INTO GROUP5.{self.table_name} ('
+        attr_sql = ''
+        value_sql = ''
         for attr in self.attributes[:-1]:
+            print(attr) # DEBUG
             # put None in absent attributes
             item_data[attr] = item_data.get(attr, None)
+            print(item_data[attr]) # DEBUG
+            print('-'*5) # DEBUG
             # set attributes
             attr_sql += f'"{attr}",'
             # set values
@@ -94,7 +105,7 @@ class General():
             sql += f"'{value}',"
         sql += f'"{list(item_data.keys())[-1]}" = '
         sql += f"'{list(item_data.values())[-1]}' "
-        sql += 'WHERE "{self.primary}" = {item_data[self.primary]}'
+        sql += f'WHERE {self.primary} = {item_data[self.primary]}'
         DB.execute_input(DB.prepare(sql),
                          item_data)
         return item_data[self.primary]
@@ -107,11 +118,12 @@ class General():
         """
         # TODO create new id if is none
         # check if item exists using primary key
-        sql = 'SELECT COUNT(*) FROM GROUP5.{self.table_name}'
+        sql = f'SELECT COUNT(*) FROM GROUP5.{self.table_name}'
         sql += f' WHERE {self.primary} = '
-        sql += "'{item_data[self.primary]}'"
-        prepared_sql = DB.prepare(sql)
-        count = DB.execute_input(prepared_sql)
+        sql += f"'{item_data.get(self.primary, -1)}'"
+        with DB.connect() as connection:
+            # Execute the query with bind variables to prevent SQL injection
+            count = connection.execute(sql).fetchone()[0]
         # call corresponding function
         if count:
             item_id = self.edit(item_data)

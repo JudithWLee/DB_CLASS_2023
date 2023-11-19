@@ -30,7 +30,7 @@ class Tracker():
         self.task_id = request_args.get("task_id", None)
         # for adding comments
         # TODO do other creating item functions use this as well?
-        self.content = request_args.get("content", None)
+        self.content = (dict(request.form))
 
     def show_detail(self):
         target_data = self.my_table.get_detail(self.item_id)
@@ -72,12 +72,15 @@ class Tracker():
             return self.list_table()
 
     def new(self):
-        new_id = self.my_table.save(self.content)
+        print(self.content) # DEBUG
         if self.target_table == "comment":
+            self.my_table = Comment(self.task_id)
+            self.my_table.save(self.content)
             # setting things back to task so that we can show the task detail
             self.my_table = Task()
             self.item_id = self.task_id
         else:
+            new_id = self.my_table.save(self.content)
             self.item_id = new_id
         return self.show_detail()
 
@@ -100,7 +103,7 @@ def list_table():
 @tracker.route('/delete', methods=['GET', 'POST'])
 def delete():
     my_tracker = Tracker(request.args)
-    return my_tracker.delete_comment()
+    return my_tracker.delete()
 
 @tracker.route('/empty_form')
 def empty_form():
@@ -111,4 +114,8 @@ def empty_form():
 def new():
     print("new!") # DEBUG
     my_tracker = Tracker(request.args)
-    return my_tracker.new
+    return my_tracker.new()
+
+@tracker.route('/save', methods=['GET', 'POST'])
+def save():
+    pass

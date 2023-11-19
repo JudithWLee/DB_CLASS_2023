@@ -181,7 +181,7 @@
         Leave Your Comment
       </div>
       <div class="card-body">
-        <form  method='post' action={{ url_for('tracker.new', target_table='Comment') }} >
+        <form  method='post' action={{ url_for('tracker.new', target_table='Comment', task_id=item_detail.task_id) }} >
           <div class="row">
             <div class="col-sm-12">
               <button type="submit" class="btn btn-outline-primary register_btn">Comment!</button>
