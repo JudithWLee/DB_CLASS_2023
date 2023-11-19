@@ -1,5 +1,6 @@
 from link import *
 from api.sql import DB
+from api.global_vars import *
 class General():
     """Parent class for TrackUser, Task, Comment, and Feature.
 
@@ -62,17 +63,17 @@ class General():
         if self.generate_id:
             item_data[self.primary] = self._gen_id()
 
-        sql = f'INSERT INTO GROUP5.{self.table_name} ('
+        sql = f'INSERT INTO {self.table_name} ('
         attr_sql = ''
         value_sql = ''
         for attr in self.attributes[:-1]:
             # put None in absent attributes
             item_data[attr] = item_data.get(attr, None)
             # set attributes
-            attr_sql += f'"{attr}",'
+            attr_sql += f'{attr},'
             # set values
             value_sql += f':{attr},'
-        attr_sql += f'"{self.attributes[-1]}")'
+        attr_sql += f'{self.attributes[-1]}) '
         value_sql += f':{self.attributes[-1]}) '
 
         sql += attr_sql
@@ -92,9 +93,9 @@ class General():
         sql = f'UPDATE group5.{self.table_name} SET'
 
         for attr, value in list(item_data.items())[:-1]:
-            sql += f'"{attr}" = '
+            sql += f'{attr} = '
             sql += f"'{value}',"
-        sql += f'"{list(item_data.keys())[-1]}" = '
+        sql += f'{list(item_data.keys())[-1]} = '
         sql += f"'{list(item_data.values())[-1]}' "
         sql += f'WHERE {self.primary} = {item_data[self.primary]}'
         DB.execute_input(DB.prepare(sql),

@@ -4,6 +4,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from link import *
 from api.sql import *
 from api.user import TrackUser
+from api.global_vars import *
 
 api = Blueprint('api', __name__, template_folder='./templates')
 
@@ -44,6 +45,7 @@ def login():
             user = User()
             user.id = account
             login_user(user)
+            GlobalVar().set_logged_in_user(account)
 
             # TODO change url to rendering list issue
             return redirect(url_for('tracker.list_table',

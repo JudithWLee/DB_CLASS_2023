@@ -40,6 +40,11 @@ class Tracker():
             return render_template(self.my_table.detail_page,
                                    item_detail = target_data,
                                    comment_list = comment_list)
+        elif self.target_table == "feature":
+            task_list = self.my_table.list_tasks()
+            return render_template(self.my_table.detail_page,
+                                   item_detail = target_data,
+                                   task_list = task_list)
         else:
             return render_template(self.my_table.detail_page,
                                    item_detail = target_data)
@@ -77,6 +82,7 @@ class Tracker():
             self.my_table = Comment(self.task_id)
             self.my_table.save(self.content)
             # setting things back to task so that we can show the task detail
+            self.target_table = "task"
             self.my_table = Task()
             self.item_id = self.task_id
         else:

@@ -2,6 +2,8 @@ from datetime import datetime
 from link import *
 from api.General import General
 from api.sql import DB
+from api.user import TrackUser
+from api.global_vars import *
 class Comment(General):
     """Comments belonging to a specific task.
 
@@ -16,7 +18,7 @@ class Comment(General):
     def __init__(self, item_id = None):
         self.taskId = item_id
         self.table_name = "TASKCOMMENT"
-        self.attributes = ["commentId","commenterId","taskId","content",
+        self.attributes = ["commentId","COMMENTERID",'taskId',"content",
                            "commentTime","lastUpdateTime"]
         self.primary = "commentId"
         self.list_page = None
@@ -46,4 +48,6 @@ class Comment(General):
         # first set commenterid, taskid, comment time, and last updated time
         item_data['taskId'] = self.taskId
         item_data['commentTime'] = datetime.now()
+        item_data['lastUpdateTime'] = datetime.now()
+        item_data['COMMENTERID'] = GlobalVar().get_logged_in_user()
         super().create(item_data)

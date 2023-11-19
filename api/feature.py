@@ -62,7 +62,7 @@ class Feature(General):
         return dict(zip(title, data[0]))
 
     def list_tasks(self):
-        """Get details of feature.
+        """Get all tasks belonging to this feature
 
         Returns:
         - all details of tasks belonging to this feature
@@ -70,11 +70,12 @@ class Feature(General):
         title = Task().attributes.copy()
         title.append('ownerName')
         sql = "SELECT t.*, u_owner.userName ownerName \
-               FROM FEATURE f, \
-               LEFT JOIN FEATURETASKRELATION r ON f.featureId = r.featureId \
-               LEFT JOIN TASK t ON r.taskId = t.taskId "
+               FROM FEATURE f \
+               LEFT JOIN FEATURETASKRELATION r ON f.featureId = r.featureId "
+        sql+=  'LEFT JOIN TASK t ON r."taskId" = t."taskId" '
         sql+=  'LEFT JOIN TRACKUSER u_owner ON t.taskOwner = u_owner."userId" \
                WHERE f.featureId = :featureId'
+        print(sql) # DEBUG
         data = DB.fetchall(DB.execute_input(DB.prepare(sql),
                                             {'featureid': self.featureId}))
         data_list = []
