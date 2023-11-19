@@ -73,7 +73,7 @@ class Feature(General):
         sql = "SELECT t.*, u_owner.userName ownerName \
                FROM FEATURE f \
                LEFT JOIN FEATURETASKRELATION r ON f.featureId = r.featureId "
-        sql+=  'LEFT JOIN TASK t ON r."taskId" = t."taskId" '
+        sql+=  'LEFT JOIN TASK t ON r.TASKID = t."taskId" '
         sql+=  'LEFT JOIN TRACKUSER u_owner ON t.taskOwner = u_owner."userId" \
                WHERE f.featureId = :featureId'
         print(sql) # DEBUG
@@ -81,7 +81,7 @@ class Feature(General):
                                             {'featureid': self.featureId}))
         data_list = []
         for entry in data:
-            data_list.append(dict(zip(title, data[0])))
+            data_list.append(dict(zip(title, entry)))
         return data_list
 
     def add_task(self):

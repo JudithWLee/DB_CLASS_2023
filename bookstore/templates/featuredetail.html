@@ -98,7 +98,7 @@
               <tr>
                 <td width="20%">
                   <center>
-                    <form  method='post' action={{ url_for('bookstore.featuredetail.deleteTask') }} >
+                    <form  method='post' action={{ url_for('tracker.delete', target_table="task", id=j.taskId) }} >
                       <input name="taskId" type="hidden" value="{{j.taskId}}">
                       <button type="submit" class="btn btn-outline-danger register_btn">Delete</button>
                     </form>                              
